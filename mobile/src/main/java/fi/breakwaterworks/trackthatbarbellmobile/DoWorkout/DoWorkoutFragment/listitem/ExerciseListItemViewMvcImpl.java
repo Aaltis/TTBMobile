@@ -1,0 +1,74 @@
+package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.listitem;
+
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+import fi.breakwaterworks.model.Exercise;
+import fi.breakwaterworks.model.SetRepsWeight;
+import fi.breakwaterworks.trackthatbarbellmobile.R;
+import fi.breakwaterworks.trackthatbarbellmobile.common.BaseObservableViewMvc;
+import fi.breakwaterworks.trackthatbarbellmobile.common.ViewMvcFactory;
+
+public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseListItemViewMvc.Listener>
+        implements ExerciseListItemViewMvc, SRWDialog.AddClickListener {
+
+    private final TextView mTxtExerciseName;
+    private final Button mBtnAddSetRepsWeight;
+    private final LinearLayout mLinearLayoutSetRepsWeight;
+    private Exercise mExercise;
+    private LayoutInflater mInflater;
+    private ViewGroup mViewGroup;
+
+    public ExerciseListItemViewMvcImpl(@NotNull LayoutInflater inflater, ViewGroup parent, Activity parentActivity, ViewMvcFactory viewMvcFactory) {
+        setRootView(inflater.inflate(R.layout.item_exercise, parent, false));
+        mInflater = inflater;
+        mViewGroup = parent;
+        mTxtExerciseName = findViewById(R.id.textview_exercise_movement_name);
+        mLinearLayoutSetRepsWeight = findViewById(R.id.linearlayout_setrepsweight);
+        mBtnAddSetRepsWeight = findViewById(R.id.button_open_SRW_dialog);
+
+        ExerciseListItemViewMvcImpl listenerBinding = this;
+        mBtnAddSetRepsWeight.setOnClickListener(v -> {
+            SRWDialog dialog = new SRWDialog(parentActivity);
+            dialog.bindListener(listenerBinding);
+            dialog.show();
+        });
+    }
+
+    @Override
+    public void bindExercise(Exercise exercise) {
+        mExercise = exercise;
+        mTxtExerciseName.setText(exercise.getMovementName());
+    }
+
+    @Override
+    public void refreshSetRepsWeightList(List<SetRepsWeight> setRepsWeightList) {
+        mLinearLayoutSetRepsWeight.removeAllViews();
+        for (SetRepsWeight srw : setRepsWeightList) {
+            View viewSRWItem = mInflater.inflate(R.layout.srw_item, mViewGroup, false);
+            TextView view = viewSRWItem.findViewById(R.id.text_view_srw_item);
+            view.setText(srw.getAsString());
+            mLinearLayoutSetRepsWeight.addView(viewSRWItem);
+        }
+    }
+
+
+    @Override
+    public Void getValues(String set, String reps, String weight) {
+        if (set.isEmpty()) {
+            set = "0";
+        }
+        mExercise.AddToSetRepsWeights((new SetRepsWeight(Integer.parseInt(set), Integer.parseInt(reps), Long.parseLong(weight))));
+        refreshSetRepsWeightList(mExercise.getSetRepsWeights());
+        return null;
+    }
+}

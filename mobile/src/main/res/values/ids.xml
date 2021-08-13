@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="item_workout_layouts_list_textview" type="id" />
+    <item name="item_workout_template_movement_name_textview" type="id" />
+    <item name="item_workout_template_movement_reps_amount_textview" type="id" />
+    <item name="item_workout_template_movement_weight_amount_textview" type="id" />
+    <item name="item_workout_template_movement_name_text_view" type="id" />
+</resources>

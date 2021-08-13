@@ -1,0 +1,5 @@
+https://medium.com/@cervonefrancesco/model-view-presenter-android-guidelines-94970b430ddf
+
+https://armanco.medium.com/model-view-presenter-mvp-architecture-on-android-30137bf13a0a
+
+one way to handle presenter/view

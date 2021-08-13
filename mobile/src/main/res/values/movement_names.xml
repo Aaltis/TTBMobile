@@ -1,0 +1,7 @@
+<resources>
+    <string name="squat">Squat</string>
+    <string name="bench">bench</string>
+    <string name="deadlift">Deadlift</string>
+    <string name="overheadpress">Over Head Press</string>
+    <string name="starting_strength">Starting Strength</string>
+</resources>

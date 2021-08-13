@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="fi.breakwaterworks.trackthatbarbellmobile.WorkoutActivity">
+
+        <EditText
+            android:id="@+id/editTextMovementName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:text="movement"
+            android:gravity="center"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="86dp" />
+
+        <EditText
+            android:id="@+id/editTextRepsWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:gravity="center"
+            android:text="RepsWeight"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="132dp" />
+
+        <EditText
+            android:id="@+id/editTextSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:gravity="center"
+            android:text="Set"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="183dp" />
+
+        <Button
+            android:id="@+id/buttonContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            tools:layout_editor_absoluteX="212dp"
+            tools:layout_editor_absoluteY="231dp" />
+
+</LinearLayout>

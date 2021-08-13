@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">TrackThatBarbellMobile</string>
+    <string name="title_activity_workout_main">WorkoutMain</string>
+    <string name="title_activity_workout_running">WorkoutRunningActivity</string>
+    <string name="title_activity_authentication">AuthenticationActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_workout_template_config">WorkoutTemplateConfigActivity</string>
+    <string name="title_activity_workout_template_initialization">
+        WorkoutTemplateInitializationActivity
+    </string>
+    <string name="weight">weight</string>
+    <string name="reps">reps</string>
+    <string name="title_activity_do_workout">DoWorkoutActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

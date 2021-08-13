@@ -1,0 +1,4 @@
+[submodule "TrackThatBarbellLibrary"]
+	path = TrackThatBarbellLibrary
+	url = git@breakwaterwork.redirectme.net:/opt/git/TrackThatBarbellLibrary.git
+	branch = master
