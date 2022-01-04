@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3c61f487f17a5f01791756be69ba88c7",
+    "identityHash": "90224b377904ac42dfaea08f6658f60a",
     "entities": [
       {
         "tableName": "users",
@@ -457,11 +457,55 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "config",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`config_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverUrl` TEXT, `token` TEXT, `saveAlwaysLocally` INTEGER NOT NULL, `saveAlwaysRemote` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "configId",
+            "columnName": "config_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverUrl",
+            "columnName": "serverUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "token",
+            "columnName": "token",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "saveAlwaysLocally",
+            "columnName": "saveAlwaysLocally",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "saveAlwaysRemote",
+            "columnName": "saveAlwaysRemote",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "config_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3c61f487f17a5f01791756be69ba88c7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"90224b377904ac42dfaea08f6658f60a\")"
     ]
   }
 }

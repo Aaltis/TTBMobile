@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,6 @@ import fi.breakwaterworks.trackthatbarbellmobile.common.onBackPressedListener;
 
 public class DoWorkoutFragment extends
         BaseFragment implements onBackPressedListener, ExerciseListViewMvc.Listener {
-
     private ExerciseListViewMvc mViewMvc;
     public DoWorkoutFragment.Listener DoWorkoutFragmentListener;
     public Activity parentActivity;
@@ -32,8 +32,8 @@ public class DoWorkoutFragment extends
 
     public interface Listener {
         void openAddMovementsClicked();
-
         void onSearchQuerySubmitted(String name);
+        void saveWorkout();
 
     }
 
@@ -48,7 +48,6 @@ public class DoWorkoutFragment extends
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         mViewMvc = getCompositionRoot().getViewMvcFactory().getExerciseListViewMvc(container, parentActivity);
         mViewMvc.registerListener(this);
         return mViewMvc.getRootView();
@@ -88,6 +87,11 @@ public class DoWorkoutFragment extends
     @Override
     public void onOpenAddMovementsClicked() {
         DoWorkoutFragmentListener.openAddMovementsClicked();
+    }
+
+    @Override
+    public void saveWorkout() {
+        DoWorkoutFragmentListener.saveWorkout();
     }
 
     @Override

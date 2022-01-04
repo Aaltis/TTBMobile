@@ -6,12 +6,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://breakwaterworks.redirectme.net:8081/api/";
-
-    public static Retrofit getRetrofitInstance() {
+    //TODO user has to set this or hide it somewhere.
+    private static final String BASE_URL = "10.0.2.2:8081/api/";
+    //"http://breakwaterworks.redirectme.net:8081/api/";
+    public static Retrofit getRetrofitInstance(String url) {
         if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

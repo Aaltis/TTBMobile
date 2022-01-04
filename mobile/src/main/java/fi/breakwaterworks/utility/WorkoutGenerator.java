@@ -11,7 +11,7 @@ import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.model.WorkLog;
 import fi.breakwaterworks.model.Workout;
-import fi.breakwaterworks.networking.repository.WorkLogRepository;
+import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 

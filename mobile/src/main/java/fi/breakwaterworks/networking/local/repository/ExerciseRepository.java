@@ -1,4 +1,4 @@
-package fi.breakwaterworks.networking.repository;
+package fi.breakwaterworks.networking.local.repository;
 
 import android.content.Context;
 
@@ -14,7 +14,7 @@ public class ExerciseRepository {
         this.database = TTBDatabase.getInstance(context);
     }
 
-    public Exercise getLastSuccessfullExerciseWithTypeAndSRW(SetTypeEnum setTypeEnum, SetRepsWeight srw){
-       return database.exerciseDAO().loadSuccessfullExerciseWithSetRepsWeight(setTypeEnum,srw.getSets(),srw.getReps(),true);
+    public Exercise getLastSuccessfullExerciseWithTypeAndSRW(SetTypeEnum setTypeEnum, SetRepsWeight srw) {
+        return database.exerciseDAO().loadSuccessfullExerciseWithSetRepsWeight(setTypeEnum, srw.getSets(), srw.getReps(), true);
     }
 }

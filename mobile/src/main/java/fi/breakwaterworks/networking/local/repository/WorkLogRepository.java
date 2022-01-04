@@ -1,4 +1,4 @@
-package fi.breakwaterworks.networking.repository;
+package fi.breakwaterworks.networking.local.repository;
 
 import android.content.Context;
 import android.util.Log;

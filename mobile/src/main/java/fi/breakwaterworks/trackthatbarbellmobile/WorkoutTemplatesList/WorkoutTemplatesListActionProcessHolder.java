@@ -4,7 +4,7 @@ import android.content.Context;
 
 import io.reactivex.ObservableTransformer;
 import io.reactivex.schedulers.Schedulers;
-import fi.breakwaterworks.networking.repository.WorkLogRepository;
+import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
 
 public class WorkoutTemplatesListActionProcessHolder {
 

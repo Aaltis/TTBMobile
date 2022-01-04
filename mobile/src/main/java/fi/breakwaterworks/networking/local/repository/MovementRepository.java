@@ -1,4 +1,4 @@
-package fi.breakwaterworks.networking.repository;
+package fi.breakwaterworks.networking.local.repository;
 
 import android.content.Context;
 
@@ -6,7 +6,6 @@ import java.util.List;
 
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 class MovementRepository {

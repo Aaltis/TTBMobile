@@ -1,4 +1,4 @@
-package fi.breakwaterworks.networking.DAO;
+package fi.breakwaterworks.networking.local.DAO;
 
 import androidx.room.Insert;
 

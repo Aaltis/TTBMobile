@@ -9,10 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
+import fi.breakwaterworks.model.Workout;
+import fi.breakwaterworks.networking.local.repository.ConfigRepository;
 import fi.breakwaterworks.networking.server.MovementsService;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
+import fi.breakwaterworks.networking.server.WorkoutService;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.view.PickMovementFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
@@ -25,6 +29,8 @@ public class DoWorkoutActivity extends FragmentActivity
         PickMovementFragment.Listener {
 
     private MovementsService movementsService;
+    private WorkoutService workoutService;
+    ConfigRepository configRepository;
     private static final String DO_WORKOUT_FRAGMENT_TAG = "DoWorkoutFragment";
     private static final String FIND_MOVEMENT_FRAGMENT_TAG = "FindMovementFragment";
 
@@ -37,6 +43,8 @@ public class DoWorkoutActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         exercises = new ArrayList();
         setContentView(R.layout.do_workout_activity);
+
+        configRepository = new ConfigRepository(this);
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         DoWorkoutFragment fragment;
         if (savedInstanceState == null) {
@@ -48,7 +56,8 @@ public class DoWorkoutActivity extends FragmentActivity
         ft.replace(R.id.do_workout_framelayout, fragment, DO_WORKOUT_FRAGMENT_TAG);
         ft.commit();
 
-        movementsService = RetrofitClientInstance.getRetrofitInstance().create(MovementsService.class);
+        //TODO fix url fetching
+        movementsService = RetrofitClientInstance.getRetrofitInstance("s").create(MovementsService.class);
     }
 
 
@@ -109,6 +118,28 @@ public class DoWorkoutActivity extends FragmentActivity
     public void onSearchQuerySubmitted(String query) {
 
         Call<List<Movement>> call = movementsService.getMovementsWithName(query);
+        call.enqueue(new Callback<List<Movement>>() {
+            @Override
+            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
+                refreshMovementsInMovementFragment(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Movement>> call, Throwable t) {
+                Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
+    @Override
+    public void saveWorkout() {
+        List<Config> configs = configRepository.getTokens();
+        String token = "";
+        if (configs.size() > 0) {
+            token = configs.get(0).getToken();
+        }
+        Call<List<Movement>> call = workoutService.saveWorkoutForUser(token, new Workout(exercises));
         call.enqueue(new Callback<List<Movement>>() {
             @Override
             public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
