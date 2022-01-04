@@ -6,7 +6,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-import fi.breakwaterworks.networking.repository.WorkLogRepository;
+import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.model.WorkLog;
 

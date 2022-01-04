@@ -1,4 +1,4 @@
-package fi.breakwaterworks.networking.repository;
+package fi.breakwaterworks.networking.local.repository;
 
 
 import android.content.Context;
@@ -7,9 +7,9 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.breakwaterworks.networking.DAO.ExerciseDAO;
-import fi.breakwaterworks.networking.DAO.SetRepsWeightDAO;
-import fi.breakwaterworks.networking.DAO.WorkoutDAO;
+import fi.breakwaterworks.networking.local.DAO.ExerciseDAO;
+import fi.breakwaterworks.networking.local.DAO.SetRepsWeightDAO;
+import fi.breakwaterworks.networking.local.DAO.WorkoutDAO;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.model.*;
 import io.reactivex.Flowable;

@@ -48,7 +48,10 @@ public class Workout {
     public Workout(Date date) {
         this.setDate(date);
     }
-
+    @Ignore
+    public Workout(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
     @Ignore
     public Workout(String name, List<Exercise> exercises, boolean template) {
         this.worklogId = worklogId;

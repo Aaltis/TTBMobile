@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.WorkLog;
@@ -34,6 +35,8 @@ public class DatabaseInitiatorInterractor {
         return new ObservableFromCallable((Callable<MainActivityViewState>) () -> {
             try {
                 if (!TTBDatabase.getInstance(context).userDAO().isInitialized("me")) {
+                    Log.d("initDatabase", "init config.");
+                    TTBDatabase.getInstance(context).ConfigDAO().insert(new Config());
                     Log.d("initDatabase", "Loading movements");
 
                     TTBDatabase.getInstance(context).movementDAO().insertAll(textParser.LoadMovements(context));

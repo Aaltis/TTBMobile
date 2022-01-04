@@ -5,19 +5,25 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".DoWorkout.DoWorkoutActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".MainView.MainActivity"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Config.ConfigActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Config.AuthenticationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DoWorkout.DoWorkoutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainView.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,14 +42,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AuthenticationActivity"
-            android:label="@string/title_activity_authentication"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".WorkoutTemplateInitialization.WorkoutTemplateInitializationActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_workout_template_initialization"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.jakewharton.rxbinding3.view.RxView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import fi.breakwaterworks.trackthatbarbellmobile.Config.ConfigActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList.WorkoutTemplatesListActivity;
@@ -98,6 +100,12 @@ public class MainActivity extends AppCompatActivity implements MviView<MainActiv
     private Observable<MainActivityIntent.DoWorkoutActivity> openDoWorkout() {
         return RxView.clicks(buttonDoWorkout).map(ignored ->
                 new MainActivityIntent.DoWorkoutActivity().create());
+    }
+
+    public void ChangeToCreateUserActivity(View view) {
+        Context context = MainActivity.this;
+        Intent intent = new Intent(context, ConfigActivity.class);
+        context.startActivity(intent);
     }
 //endregion
 }

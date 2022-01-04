@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context="fi.breakwaterworks.trackthatbarbellmobile.MainView.MainActivity">
 
-
-
-    <TextView
-        android:id="@+id/logoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Track That Barbell"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btnDoWorkout"
         android:layout_width="match_parent"
@@ -33,6 +19,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.942" />
+
+    <Button
+        android:id="@+id/btnCreatUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="ChangeToCreateUserActivity"
+        android:text="Create User"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnWorkoutTemplates"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/btnWorkoutTemplates"

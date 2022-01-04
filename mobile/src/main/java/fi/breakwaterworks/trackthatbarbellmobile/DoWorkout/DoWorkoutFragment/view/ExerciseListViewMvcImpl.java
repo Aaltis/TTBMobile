@@ -3,6 +3,7 @@ package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.vi
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
@@ -37,7 +38,11 @@ public class ExerciseListViewMvcImpl extends BaseObservableViewMvc<ExerciseListV
                 listener.onOpenAddMovementsClicked();
             }
         });
-
+        findViewById(R.id.btnSaveExercise).setOnClickListener(view1 -> {
+            for (ExerciseListViewMvc.Listener listener : getListeners()) {
+                listener.saveWorkout();
+            }
+        });
     }
 
     @Override
