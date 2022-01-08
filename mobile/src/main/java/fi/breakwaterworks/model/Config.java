@@ -25,7 +25,7 @@ public class Config {
     }
     public Config(String token,String url) {
         this.token = token;
-        this.serverUrl=url;
+        this.serverUrl = url;
     }
 
     public String getToken() {

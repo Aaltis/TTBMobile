@@ -1,23 +1,21 @@
 package fi.breakwaterworks.trackthatbarbellmobile.Config;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 
+import fi.breakwaterworks.networking.server.RetrofitClientInstance;
+import fi.breakwaterworks.networking.server.UserService;
 import fi.breakwaterworks.networking.server.request.AuthenticationRequest;
 import fi.breakwaterworks.networking.server.response.AuthenticationResponse;
-import fi.breakwaterworks.networking.server.RetrofitClientInstance;
 import fi.breakwaterworks.networking.server.response.ServerResponse;
-import fi.breakwaterworks.networking.server.UserService;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,12 +30,18 @@ public class LoginFragment extends Fragment {
     private String username;
     private String password;
     private String serverUrl;
-    public AuthenticationActivity parentActivity;
+
     private UserService userService;
 
     private TextView textViewUserName;
     private TextView textViewPassword;
     private TextView textViewServerUrl;
+    public Listener listener;
+
+    public interface Listener {
+        void saveTokenAndUrlToLocalDatabase(String token, String url);
+        void toastMessage(String message);
+    }
 
     public LoginFragment() {
     }
@@ -84,37 +88,48 @@ public class LoginFragment extends Fragment {
             textViewServerUrl.setText(serverUrl);
         }
         if (username != null && password != null && serverUrl != null) {
-            LoginUser(username, password,serverUrl);
+            LoginUser(username, password, serverUrl);
 
         }
         Button createUserButton = view.findViewById(R.id.buttonLogin);
-        createUserButton.setOnClickListener(v -> LoginUser(textViewUserName.getText().toString(), textViewPassword.getText().toString(),textViewServerUrl.getText().toString()));
+        createUserButton.setOnClickListener(v -> LoginUser(textViewUserName.getText().toString(), textViewPassword.getText().toString(), textViewServerUrl.getText().toString()));
         return view;
     }
 
     private void LoginUser(String username, String password, String serverUrl) {
-        this.userService = RetrofitClientInstance.getRetrofitInstance(serverUrl).create(UserService.class);
 
-        Call<AuthenticationResponse> call = userService.loginUser(new AuthenticationRequest(
-                username,
-                password));
+        try {
+            this.userService = RetrofitClientInstance.getRetrofitInstance(serverUrl).create(UserService.class);
+        } catch (Exception ex) {
+            listener.toastMessage(ex.getMessage());
+            return;
+        }
+        Call<AuthenticationResponse> call= userService.loginUser(new AuthenticationRequest(
+                    username,
+                    password));
+
         call.enqueue(new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(parentActivity, "Login successful", Toast.LENGTH_LONG).show();
-                    parentActivity.SaveTokenToDatabase(response.body().getToken(),serverUrl);
+                    listener.saveTokenAndUrlToLocalDatabase(response.body().getToken(), serverUrl);
                 } else {
                     Gson gson = new Gson();
-                    ServerResponse message = gson.fromJson(response.errorBody().charStream(),
+                    String message;
+                    ServerResponse serverResponse = gson.fromJson(response.errorBody().charStream(),
                             ServerResponse.class);
-                    //Toast.makeText(parentActivity, message.getMessage(), Toast.LENGTH_LONG).show();
+                    if (serverResponse != null) {
+                        message = serverResponse.getMessage();
+                    } else {
+                        message = "There was problem with login.";
+                    }
+                    listener.toastMessage(message);
                 }
             }
 
             @Override
             public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                Toast.makeText(parentActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+                listener.toastMessage(t.getMessage());
             }
         });
     }

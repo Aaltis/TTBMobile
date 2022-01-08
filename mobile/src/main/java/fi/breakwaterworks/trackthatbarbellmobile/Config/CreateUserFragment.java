@@ -28,11 +28,15 @@ public class CreateUserFragment extends Fragment {
     private TextView textViewRePassword;
     private TextView textViewUserName;
     private UserService userService;
-    private AuthenticationActivity parentActivity;
 
-    public CreateUserFragment(AuthenticationActivity parentActivity) {
-        this.parentActivity = parentActivity;
-        // Required empty public constructor
+    public CreateUserFragment.Listener listener;
+
+    public interface Listener {
+        void toastMessage(String message);
+        void ChangeToLogin(String userName, String password, String sererurl);
+    }
+
+    public CreateUserFragment( ) {
     }
 
     @Override
@@ -53,22 +57,22 @@ public class CreateUserFragment extends Fragment {
         Button createUserButton = view.findViewById(R.id.buttonCreateUser);
         createUserButton.setOnClickListener(v -> createUser());
         TextView textviewToLogin = view.findViewById(R.id.textViewChangeToLogin);
-        textviewToLogin.setOnClickListener(v -> parentActivity.ChangeToLogin(null, null, null));
+        textviewToLogin.setOnClickListener(v -> listener.ChangeToLogin(null, null, null));
         return view;
     }
 
     public void createUser() {
         if (textViewServerUrl.getText().toString() == null || textViewServerUrl.getText().toString().isEmpty()) {
-            Toast.makeText(parentActivity, "Add server url", Toast.LENGTH_LONG).show();
+            listener.toastMessage("Add server url");
             return;
         }
         try {
             this.userService = RetrofitClientInstance.getRetrofitInstance(textViewServerUrl.getText().toString()).create(UserService.class);
-        }catch (Exception ex){
-            Toast.makeText(parentActivity, "bad url", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            listener.toastMessage("bad url");
             return;
         }
-        String g=textViewServerUrl.getText().toString();
+        String g = textViewServerUrl.getText().toString();
         Call<ServerResponse> call = userService.registerUser(new UserRegisterRequest(textViewUserName.getText().toString(),
                 textViewPassword.getText().toString(),
                 textViewRePassword.getText().toString()));
@@ -76,20 +80,26 @@ public class CreateUserFragment extends Fragment {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(parentActivity, "User Created", Toast.LENGTH_LONG).show();
-
-                    parentActivity.ChangeToLogin(textViewRePassword.getText().toString(), textViewPassword.getText().toString(),textViewServerUrl.getText().toString());
+                    listener.toastMessage("User Created");
+                    listener.ChangeToLogin(textViewUserName.getText().toString(), textViewPassword.getText().toString(), textViewServerUrl.getText().toString());
                 } else {
                     Gson gson = new Gson();
-                    ServerResponse message = gson.fromJson(response.errorBody().charStream(),
+
+                    String message;
+                    ServerResponse serverResponse = gson.fromJson(response.errorBody().charStream(),
                             ServerResponse.class);
-                    Toast.makeText(parentActivity, message.getMessage(), Toast.LENGTH_LONG).show();
+                    if (serverResponse != null) {
+                        message = serverResponse.getMessage();
+                    } else {
+                        message = "There was problem with login.";
+                    }
+                    listener.toastMessage(message);
                 }
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
-                Toast.makeText(parentActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+                listener.toastMessage(t.getMessage());
             }
 
         });

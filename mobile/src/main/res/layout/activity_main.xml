@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="doWorkoutActivity"
         android:text="Do Workout"
         app:layout_constraintBottom_toTopOf="@+id/btnWorkoutTemplates"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,12 +20,12 @@
         app:layout_constraintVertical_bias="0.942" />
 
     <Button
-        android:id="@+id/btnCreatUser"
+        android:id="@+id/btnConfigView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="ChangeToCreateUserActivity"
-        android:text="Create User"
+        android:onClick="ChangeToConfigActivity"
+        android:text="Config"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnWorkoutTemplates"
@@ -37,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="workoutLayoutsActivity"
         android:text="Workout Layouts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

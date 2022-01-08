@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.networking.local.usecase.SaveToken;
 import fi.breakwaterworks.trackthatbarbellmobile.MainView.MainActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
@@ -16,35 +17,37 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
-public class AuthenticationActivity extends AppCompatActivity {
+public class AuthenticationActivity extends AppCompatActivity implements LoginFragment.Listener, CreateUserFragment.Listener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-        CreateUserFragment fragment;
+        CreateUserFragment createUserFragment;
         if (savedInstanceState == null) {
-            fragment = new CreateUserFragment(this);
+            createUserFragment = new CreateUserFragment();
         } else {
-            fragment = (CreateUserFragment) getSupportFragmentManager().findFragmentById(R.id.authentication_activity_framelayout);
+            createUserFragment = (CreateUserFragment) getSupportFragmentManager().findFragmentById(R.id.authentication_activity_framelayout);
         }
-        ft.replace(R.id.authentication_activity_framelayout, fragment, "CREATE_USER_FRAGMENT_TAG");
+        assert createUserFragment != null;
+        createUserFragment.listener = this;
+        ft.replace(R.id.authentication_activity_framelayout, createUserFragment, "CREATE_USER_FRAGMENT_TAG");
         ft.commit();
-
     }
 
     public void ChangeToLogin(String username, String password, String serverUrl) {
-        LoginFragment newFragment = LoginFragment.newInstance(username, password, serverUrl);
+        LoginFragment newLoginFragment = LoginFragment.newInstance(username, password, serverUrl);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        newFragment.parentActivity = this;
-        transaction.replace(R.id.authentication_activity_framelayout, newFragment);
+        newLoginFragment.listener = this;
+        transaction.replace(R.id.authentication_activity_framelayout, newLoginFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    public void SaveTokenToDatabase(String token, String url) {
-        SaveToken saveTokenUsecase = new SaveToken(this);
-        Observable<String> o = saveTokenUsecase.saveToken(token,url);
+    @Override
+    public void saveTokenAndUrlToLocalDatabase(String token, String url) {
+        SaveToken saveTokenUseCase = new SaveToken(this);
+        Observable<String> o = saveTokenUseCase.saveToken(token, url);
         o.subscribe((new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -68,33 +71,11 @@ public class AuthenticationActivity extends AppCompatActivity {
             public void onComplete() {
             }
         }));
-
     }
 
-    //TODO move to usecase later, dont use asynctask because deprecated.
-    //this exist because we cant do database query in main thread.
-    /*private class SaveToken extends AsyncTask<String, Void, String> {
+    @Override
+    public void toastMessage(String message) {
+        Toast.makeText( AuthenticationActivity.this, message, Toast.LENGTH_LONG).show();
 
-        protected String doInBackground(String... strings) {
-            android.os.Debug.waitForDebugger();
-            List<Config> configs = TTBDatabase.getInstance(getApplicationContext()).ConfigDAO().loadConfigs();
-            //We want to use only one config, delete all others.
-            if (configs.size() == 1) {
-                TTBDatabase.getInstance(getApplicationContext()).ConfigDAO().updateToken(strings[0], configs.get(0).getConfigId());
-                return "Token Saved.";
-            }
-            if (configs.size() == 0) {
-                TTBDatabase.getInstance(getApplicationContext()).ConfigDAO().insert(new Config(strings[0], strings[1]));
-                return "Token Saved.";
-            }
-            return "fug";
-        }
-
-        protected void onPostExecute(String result) {
-            Toast.makeText(AuthenticationActivity.this, result, Toast.LENGTH_LONG).show();
-            Context context = AuthenticationActivity.this;
-            Intent intent = new Intent(context, MainActivity.class);
-            context.startActivity(intent);
-        }
-    }*/
+    }
 }

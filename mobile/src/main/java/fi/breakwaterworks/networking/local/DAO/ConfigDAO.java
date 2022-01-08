@@ -16,6 +16,6 @@ public interface ConfigDAO extends BaseDAO<Config> {
     @Query("SELECT * FROM config Limit 1")
     Single<Config> loadSingleConfig();
 
-    @Query("Update config set token=:token where config_id=:id")
-    void updateToken(String token, long id);
+    @Query("Update config set token=:token, serverUrl=:url where config_id=:id")
+    void updateTokenAndUrl(String token, String url, long id);
 }

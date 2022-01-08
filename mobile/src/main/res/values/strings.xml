@@ -23,4 +23,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="remote_url">Remote Url:</string>
+    <string name="not_set">Not set.</string>
+    <string name="token">Token:</string>
+    <string name="config_info_text">Create user or login to save url and token.</string>
+    <string name="config_button_create_login">Create User Or Login</string>
+    <string name="config_checkbox_save_training_remote">Save Training Remote Always</string>
+    <string name="config_checkbox_save_training_locally">Save Training Locally Always</string>
+    <string name="config_button_save">Save</string>
 </resources>
