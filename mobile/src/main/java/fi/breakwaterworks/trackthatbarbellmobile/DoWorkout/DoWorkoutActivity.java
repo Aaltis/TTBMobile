@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
@@ -74,7 +75,7 @@ public class DoWorkoutActivity extends FragmentActivity
 
             @Override
             public void onSuccess(@NonNull Config config) {
-                if (config.getServerUrl() != null || !config.getServerUrl().isEmpty()) {
+                if (!Objects.requireNonNull(config.getServerUrl()).isEmpty()) {
                     movementsService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(MovementsService.class);
                     workoutService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(WorkoutService.class);
                 }
@@ -186,6 +187,15 @@ public class DoWorkoutActivity extends FragmentActivity
             }
 
         });
+    }
+
+    @Override
+    public void deleteExercise(Exercise exercise) {
+        exercises.remove(exercise);
+        DoWorkoutFragment fragment = (DoWorkoutFragment) getSupportFragmentManager().findFragmentByTag(DO_WORKOUT_FRAGMENT_TAG);
+        if (fragment != null) {
+            fragment.bindExercises(exercises);
+        }
     }
 
     @Override

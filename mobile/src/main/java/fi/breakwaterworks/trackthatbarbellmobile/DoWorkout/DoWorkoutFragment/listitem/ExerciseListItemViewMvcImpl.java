@@ -40,7 +40,13 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
         buttonDelete = findViewById(R.id.button_delete);
 
         ExerciseListItemViewMvcImpl listenerBinding = this;
-        mBtnAddSetRepsWeight.setOnClickListener(v -> {
+        buttonDelete.setOnClickListener(v -> {
+            for (ExerciseListItemViewMvc.Listener listener : getListeners()) {
+                listener.DeleteExercise(mExercise);
+            }
+        });
+
+        buttonAddSetRepsWeight.setOnClickListener(v -> {
             SRWDialog dialog = new SRWDialog(parentActivity);
             dialog.bindListener(listenerBinding);
             dialog.show();

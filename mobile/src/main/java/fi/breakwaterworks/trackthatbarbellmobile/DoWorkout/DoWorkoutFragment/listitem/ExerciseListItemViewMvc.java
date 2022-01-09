@@ -12,7 +12,7 @@ ExerciseListItemViewMvc extends ObservableViewMvc<ExerciseListItemViewMvc.Listen
 
     void refreshSetRepsWeightList(List<SetRepsWeight> setRepsWeightList);
 
-    public interface Listener {
-        void addReps();
+    interface Listener {
+        void DeleteExercise(Exercise exercise);
     }
 }

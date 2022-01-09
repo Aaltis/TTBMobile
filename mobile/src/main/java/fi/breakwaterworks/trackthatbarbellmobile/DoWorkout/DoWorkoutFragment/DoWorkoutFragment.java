@@ -34,7 +34,7 @@ public class DoWorkoutFragment extends
         void openAddMovementsClicked();
         void onSearchQuerySubmitted(String name);
         void saveWorkout();
-
+        void deleteExercise(Exercise exercise);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class DoWorkoutFragment extends
     }
 
     @Override
-    public void onSearchQuerySubmitted(String movementName) {
-        DoWorkoutFragmentListener.onSearchQuerySubmitted(movementName);
+    public void deleteExercise(Exercise exercise) {
+        DoWorkoutFragmentListener.deleteExercise(exercise);
     }
 
     public void bindExercises(List<Exercise> exercises) {

@@ -53,4 +53,11 @@ public class ExerciseListViewMvcImpl extends BaseObservableViewMvc<ExerciseListV
     public void bindExercises(List<Exercise> exercises) {
         mAdapter.bindExercises(exercises);
     }
+
+    @Override
+    public void DeleteExercise(Exercise exercise) {
+        for (ExerciseListViewMvc.Listener listener : getListeners()) {
+            listener.deleteExercise(exercise);
+        }
+    }
 }

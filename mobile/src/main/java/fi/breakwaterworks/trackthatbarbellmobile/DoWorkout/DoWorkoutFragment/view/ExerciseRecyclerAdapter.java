@@ -20,9 +20,8 @@ public class ExerciseRecyclerAdapter extends RecyclerView.Adapter<ExerciseRecycl
     List<Exercise> mExercises;
     Activity mParentActivity;
 
-    @Override
-    public void addReps() {
-
+    public interface Listener {
+        void DeleteExercise(Exercise exercise);
     }
 
     public void bindExercises(List<Exercise> exercises) {
@@ -31,8 +30,9 @@ public class ExerciseRecyclerAdapter extends RecyclerView.Adapter<ExerciseRecycl
         notifyDataSetChanged();
     }
 
-    public interface Listener {
-        void onExerciseClicked(Movement movement);
+    @Override
+    public void DeleteExercise(Exercise exercise) {
+        listener.DeleteExercise(exercise);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -49,11 +49,10 @@ public class ExerciseRecyclerAdapter extends RecyclerView.Adapter<ExerciseRecycl
     private final ViewMvcFactory mViewMvcFactory;
 
     public ExerciseRecyclerAdapter(Listener listener, Activity parentActivity, ViewMvcFactory viewMvcFactory) {
-        mListener = listener;
+        this.listener = listener;
         mViewMvcFactory = viewMvcFactory;
         mExercises = new ArrayList<>();
         mParentActivity = parentActivity;
-
     }
 
     @NonNull
