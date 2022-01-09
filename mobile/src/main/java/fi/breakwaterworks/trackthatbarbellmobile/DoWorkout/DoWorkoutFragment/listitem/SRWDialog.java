@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.listitem.ExerciseListItemViewMvcImpl;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 
 public class SRWDialog extends Dialog implements
@@ -49,7 +50,7 @@ public class SRWDialog extends Dialog implements
             return;
         }
 
-        mListener.getValues(editText_set.getText().toString(),
+        mListener.setSetRepsWeightToExercise(editText_set.getText().toString(),
                 editText_reps.getText().toString(),
                 editText_weight.getText().toString());
 
@@ -62,7 +63,7 @@ public class SRWDialog extends Dialog implements
     }
 
     public interface AddClickListener {
-        Void getValues(String set, String reps, String weight);
+        Void setSetRepsWeightToExercise(String set, String reps, String weight);
     }
 
 }

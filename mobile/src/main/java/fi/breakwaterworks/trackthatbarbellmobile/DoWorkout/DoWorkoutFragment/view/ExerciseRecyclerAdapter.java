@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
-import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.listitem.ExerciseListItemViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.common.ViewMvcFactory;
 
@@ -38,14 +37,13 @@ public class ExerciseRecyclerAdapter extends RecyclerView.Adapter<ExerciseRecycl
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final ExerciseListItemViewMvc mViewMvc;
-
         public MyViewHolder(ExerciseListItemViewMvc viewMvc) {
             super(viewMvc.getRootView());
             mViewMvc = viewMvc;
         }
     }
 
-    private final ExerciseRecyclerAdapter.Listener mListener;
+    private final ExerciseRecyclerAdapter.Listener listener;
     private final ViewMvcFactory mViewMvcFactory;
 
     public ExerciseRecyclerAdapter(Listener listener, Activity parentActivity, ViewMvcFactory viewMvcFactory) {

@@ -2,11 +2,8 @@ package fi.breakwaterworks.networking.local.usecase;
 
 import android.content.Context;
 
-import java.util.List;
-
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -19,13 +16,8 @@ public class LoadConfigUseCase {
     }
 
     public Single<Config> Load() {
-
-
                return  ttbDatabase.ConfigDAO().loadSingleConfig()
                        .subscribeOn(Schedulers.newThread())
                        .observeOn(AndroidSchedulers.mainThread());
-                //We want to use only one config, delete all others.
-
-
     }
 }

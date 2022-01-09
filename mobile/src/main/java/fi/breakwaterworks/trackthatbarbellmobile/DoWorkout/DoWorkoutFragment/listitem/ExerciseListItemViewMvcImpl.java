@@ -14,6 +14,7 @@ import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.SetRepsWeight;
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.view.ExerciseListViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseObservableViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.common.ViewMvcFactory;
@@ -72,7 +73,7 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
 
 
     @Override
-    public Void getValues(String set, String reps, String weight) {
+    public Void setSetRepsWeightToExercise(String set, String reps, String weight) {
         if (set.isEmpty()) {
             set = "0";
         }

@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MviView<MainActiv
                 new MainActivityIntent.DoWorkoutActivity().create());
     }
 
-    public void ChangeToCreateUserActivity(View view) {
+    public void ChangeToConfigActivity(View view) {
         Context context = MainActivity.this;
         Intent intent = new Intent(context, ConfigActivity.class);
         context.startActivity(intent);

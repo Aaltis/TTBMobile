@@ -3,8 +3,6 @@ package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.vi
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
-import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseObservableViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.common.ViewMvcFactory;
@@ -43,10 +40,6 @@ public class ExerciseListViewMvcImpl extends BaseObservableViewMvc<ExerciseListV
                 listener.saveWorkout();
             }
         });
-    }
-
-    @Override
-    public void onExerciseClicked(Movement movement) {
     }
 
     @Override
