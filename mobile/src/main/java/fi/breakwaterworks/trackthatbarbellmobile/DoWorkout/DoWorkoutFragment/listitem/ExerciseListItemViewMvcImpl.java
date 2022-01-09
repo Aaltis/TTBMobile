@@ -22,7 +22,9 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
         implements ExerciseListItemViewMvc, SRWDialog.AddClickListener {
 
     private final TextView mTxtExerciseName;
-    private final Button mBtnAddSetRepsWeight;
+    private final Button buttonAddSetRepsWeight;
+    private final Button buttonDelete;
+
     private final LinearLayout mLinearLayoutSetRepsWeight;
     private Exercise mExercise;
     private LayoutInflater mInflater;
@@ -34,7 +36,8 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
         mViewGroup = parent;
         mTxtExerciseName = findViewById(R.id.textview_exercise_movement_name);
         mLinearLayoutSetRepsWeight = findViewById(R.id.linearlayout_setrepsweight);
-        mBtnAddSetRepsWeight = findViewById(R.id.button_open_SRW_dialog);
+        buttonAddSetRepsWeight = findViewById(R.id.button_open_SRW_dialog);
+        buttonDelete = findViewById(R.id.button_delete);
 
         ExerciseListItemViewMvcImpl listenerBinding = this;
         mBtnAddSetRepsWeight.setOnClickListener(v -> {

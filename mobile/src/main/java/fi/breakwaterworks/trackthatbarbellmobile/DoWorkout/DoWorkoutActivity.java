@@ -14,12 +14,17 @@ import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.networking.local.repository.ConfigRepository;
+import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
 import fi.breakwaterworks.networking.server.MovementsService;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
 import fi.breakwaterworks.networking.server.WorkoutService;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.view.PickMovementFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +38,8 @@ public class DoWorkoutActivity extends FragmentActivity
     ConfigRepository configRepository;
     private static final String DO_WORKOUT_FRAGMENT_TAG = "DoWorkoutFragment";
     private static final String FIND_MOVEMENT_FRAGMENT_TAG = "FindMovementFragment";
-
+    LoadConfigUseCase loadConfigUseCase;
+    private String token;
     //this is model for active activity.
     //TODO what could be better way to store this?
     private List<Exercise> exercises;
@@ -43,6 +49,7 @@ public class DoWorkoutActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         exercises = new ArrayList();
         setContentView(R.layout.do_workout_activity);
+        loadConfigAndInitRetrofit();
 
         configRepository = new ConfigRepository(this);
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
@@ -56,8 +63,29 @@ public class DoWorkoutActivity extends FragmentActivity
         ft.replace(R.id.do_workout_framelayout, fragment, DO_WORKOUT_FRAGMENT_TAG);
         ft.commit();
 
-        //TODO fix url fetching
-        movementsService = RetrofitClientInstance.getRetrofitInstance("s").create(MovementsService.class);
+    }
+
+    private void loadConfigAndInitRetrofit() {
+        loadConfigUseCase = new LoadConfigUseCase(this);
+        Single<Config> observable = loadConfigUseCase.Load();
+        observable.subscribe((new SingleObserver<Config>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {}
+
+            @Override
+            public void onSuccess(@NonNull Config config) {
+                if (config.getServerUrl() != null || !config.getServerUrl().isEmpty()) {
+                    movementsService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(MovementsService.class);
+                    workoutService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(WorkoutService.class);
+                }
+                token = config.getToken();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+        }));
     }
 
 
@@ -101,9 +129,7 @@ public class DoWorkoutActivity extends FragmentActivity
             ft.hide(movementFragment);
         }
         ft.commit();
-
         return fragment;
-
     }
 
     @Override
@@ -116,7 +142,10 @@ public class DoWorkoutActivity extends FragmentActivity
 
     @Override
     public void onSearchQuerySubmitted(String query) {
-
+        if (movementsService == null) {
+            Toast.makeText(DoWorkoutActivity.this, "Missing remote url", Toast.LENGTH_LONG).show();
+            return;
+        }
         Call<List<Movement>> call = movementsService.getMovementsWithName(query);
         call.enqueue(new Callback<List<Movement>>() {
             @Override
@@ -134,20 +163,25 @@ public class DoWorkoutActivity extends FragmentActivity
 
     @Override
     public void saveWorkout() {
-        List<Config> configs = configRepository.getTokens();
-        String token = "";
-        if (configs.size() > 0) {
-            token = configs.get(0).getToken();
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(DoWorkoutActivity.this, "Token is missing, cant save.", Toast.LENGTH_LONG).show();
+            return;
         }
-        Call<List<Movement>> call = workoutService.saveWorkoutForUser(token, new Workout(exercises));
-        call.enqueue(new Callback<List<Movement>>() {
+
+        if (workoutService == null) {
+            Toast.makeText(DoWorkoutActivity.this, "Check that your url is correct.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Call<List<String>> call = workoutService.saveWorkoutForUser(token, new Workout(exercises));
+        call.enqueue(new Callback<List<String>>() {
             @Override
-            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                refreshMovementsInMovementFragment(response.body());
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                Toast.makeText(DoWorkoutActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<List<Movement>> call, Throwable t) {
+            public void onFailure(Call<List<String>> call, Throwable t) {
                 Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
 
@@ -156,6 +190,10 @@ public class DoWorkoutActivity extends FragmentActivity
 
     @Override
     public void openAddMovementsClicked() {
+        if (movementsService == null) {
+            Toast.makeText(DoWorkoutActivity.this, "Missing remote url", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         Call<List<Movement>> call = movementsService.getAllMovements();
         call.enqueue(new Callback<List<Movement>>() {
@@ -169,9 +207,7 @@ public class DoWorkoutActivity extends FragmentActivity
             public void onFailure(Call<List<Movement>> call, Throwable t) {
                 Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
-
         });
-
     }
 
     public void refreshMovementsInMovementFragment(List<Movement> movements) {
