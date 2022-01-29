@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,8 +30,7 @@ public class DoWorkoutFragment extends
     }
 
     public interface Listener {
-        void openAddMovementsClicked();
-        void onSearchQuerySubmitted(String name);
+        void ChangeToPickMovementFragment();
         void saveWorkout();
         void deleteExercise(Exercise exercise);
     }
@@ -86,7 +84,7 @@ public class DoWorkoutFragment extends
 
     @Override
     public void onOpenAddMovementsClicked() {
-        DoWorkoutFragmentListener.openAddMovementsClicked();
+        DoWorkoutFragmentListener.ChangeToPickMovementFragment();
     }
 
     @Override

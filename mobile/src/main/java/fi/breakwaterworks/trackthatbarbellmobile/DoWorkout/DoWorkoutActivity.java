@@ -16,7 +16,6 @@ import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.networking.local.repository.ConfigRepository;
 import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
-import fi.breakwaterworks.networking.server.MovementsService;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
 import fi.breakwaterworks.networking.server.WorkoutService;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutFragment;
@@ -34,14 +33,13 @@ public class DoWorkoutActivity extends FragmentActivity
         implements DoWorkoutFragment.Listener,
         PickMovementFragment.Listener {
 
-    private MovementsService movementsService;
     private WorkoutService workoutService;
     ConfigRepository configRepository;
     private static final String DO_WORKOUT_FRAGMENT_TAG = "DoWorkoutFragment";
     private static final String FIND_MOVEMENT_FRAGMENT_TAG = "FindMovementFragment";
     LoadConfigUseCase loadConfigUseCase;
     private String token;
-    //this is model for active activity.
+
     //TODO what could be better way to store this?
     private List<Exercise> exercises;
 
@@ -54,10 +52,8 @@ public class DoWorkoutActivity extends FragmentActivity
 
         configRepository = new ConfigRepository(this);
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-        DoWorkoutFragment fragment;
-        if (savedInstanceState == null) {
-            fragment = new DoWorkoutFragment(this);
-        } else {
+        DoWorkoutFragment fragment = new DoWorkoutFragment(this);
+        if (savedInstanceState != null) {
             fragment = (DoWorkoutFragment) getSupportFragmentManager().findFragmentById(R.id.do_workout_framelayout);
         }
         fragment.DoWorkoutFragmentListener = this;
@@ -71,12 +67,12 @@ public class DoWorkoutActivity extends FragmentActivity
         Single<Config> observable = loadConfigUseCase.Load();
         observable.subscribe((new SingleObserver<Config>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {}
+            public void onSubscribe(@NonNull Disposable d) {
+            }
 
             @Override
             public void onSuccess(@NonNull Config config) {
                 if (!Objects.requireNonNull(config.getServerUrl()).isEmpty()) {
-                    movementsService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(MovementsService.class);
                     workoutService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(WorkoutService.class);
                 }
                 token = config.getToken();
@@ -84,36 +80,23 @@ public class DoWorkoutActivity extends FragmentActivity
 
             @Override
             public void onError(@NonNull Throwable e) {
-
             }
         }));
     }
 
 
-    public void ChangeToMovementPickerFragment(List<Movement> movements) {
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-        PickMovementFragment fragment = (PickMovementFragment) getSupportFragmentManager().findFragmentByTag(FIND_MOVEMENT_FRAGMENT_TAG);
-        if (fragment == null) {
-            ft.add(R.id.do_workout_framelayout, new PickMovementFragment(movements), FIND_MOVEMENT_FRAGMENT_TAG);
-        } else {
-            ft.show(fragment);
-        }
-
-        //no need to destroy fragment every time, so we hide it.
-        DoWorkoutFragment doWorkoutFragment = (DoWorkoutFragment) getSupportFragmentManager().findFragmentByTag(DO_WORKOUT_FRAGMENT_TAG);
-        if (doWorkoutFragment != null) {
-            ft.hide(doWorkoutFragment);
-        }
-        ft.commit();
-    }
-
     @Override
     public void onMovementClicked(Movement movement) {
         exercises.add(new Exercise(exercises.size() + 1, movement));
-
         //no need to destroy fragment every time.
         DoWorkoutFragment fragment = hidePickMovementFragment();
         fragment.bindExercises(exercises);
+    }
+
+    @Override
+    public void ToastError(String error) {
+        Toast.makeText(DoWorkoutActivity.this, error, Toast.LENGTH_LONG).show();
+
     }
 
     public DoWorkoutFragment hidePickMovementFragment() {
@@ -141,26 +124,6 @@ public class DoWorkoutActivity extends FragmentActivity
         }
     }
 
-    @Override
-    public void onSearchQuerySubmitted(String query) {
-        if (movementsService == null) {
-            Toast.makeText(DoWorkoutActivity.this, "Missing remote url", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Call<List<Movement>> call = movementsService.getMovementsWithName(query);
-        call.enqueue(new Callback<List<Movement>>() {
-            @Override
-            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                refreshMovementsInMovementFragment(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<Movement>> call, Throwable t) {
-                Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-        });
-    }
 
     @Override
     public void saveWorkout() {
@@ -199,34 +162,32 @@ public class DoWorkoutActivity extends FragmentActivity
     }
 
     @Override
-    public void openAddMovementsClicked() {
-        if (movementsService == null) {
-            Toast.makeText(DoWorkoutActivity.this, "Missing remote url", Toast.LENGTH_LONG).show();
-            return;
+    public void ChangeToPickMovementFragment() {
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        PickMovementFragment pickMovementFragment = (PickMovementFragment) getSupportFragmentManager().findFragmentByTag(FIND_MOVEMENT_FRAGMENT_TAG);
+        if (pickMovementFragment == null) {
+            pickMovementFragment = new PickMovementFragment();
+            pickMovementFragment.pickExerciseFragmentListener = this;
+            ft.add(R.id.do_workout_framelayout, pickMovementFragment, FIND_MOVEMENT_FRAGMENT_TAG);
+        } else {
+            ft.show(pickMovementFragment);
         }
 
-        Call<List<Movement>> call = movementsService.getAllMovements();
-        call.enqueue(new Callback<List<Movement>>() {
-            @Override
-            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                ChangeToMovementPickerFragment(response.body());
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Movement>> call, Throwable t) {
-                Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        //no need to destroy fragment every time, so we hide it.
+        DoWorkoutFragment doWorkoutFragment = (DoWorkoutFragment) getSupportFragmentManager().findFragmentByTag(DO_WORKOUT_FRAGMENT_TAG);
+        if (doWorkoutFragment != null) {
+            ft.hide(doWorkoutFragment);
+        }
+        ft.commit();
     }
 
-    public void refreshMovementsInMovementFragment(List<Movement> movements) {
+    /*public void refreshMovementsInMovementFragment(List<Movement> movements) {
         PickMovementFragment fragment = (PickMovementFragment) getSupportFragmentManager().findFragmentByTag(FIND_MOVEMENT_FRAGMENT_TAG);
         if (fragment != null) {
             fragment.bindMovements(movements);
         }
 
-    }
+    }*/
 }
 
 
