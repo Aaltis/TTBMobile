@@ -11,6 +11,7 @@ import java.util.List;
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
+import fi.breakwaterworks.networking.local.usecase.LoadMovementsUseCase;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.RemoteRepositoryMovementsHandler;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseFragment;
 import io.reactivex.Single;
@@ -28,6 +29,7 @@ public class PickMovementFragment extends BaseFragment implements
 
     public interface Listener {
         void onMovementClicked(Movement movement);
+
         void ToastError(String error);
     }
 
@@ -50,7 +52,7 @@ public class PickMovementFragment extends BaseFragment implements
         viewMvc.registerListener(this);
         return viewMvc.getRootView();
     }
-    
+
     @Override
     public void onStart() {
         super.onStart();
@@ -85,6 +87,24 @@ public class PickMovementFragment extends BaseFragment implements
         if (config != null && config.getServerUrl() != null) {
             remoteRepositoryMovementsHandler = new RemoteRepositoryMovementsHandler(this, config);
             remoteRepositoryMovementsHandler.loadMovements();
+        } else {
+            LoadMovementsUseCase loadMovementsUseCase = new LoadMovementsUseCase(getContext());
+            Single<List<Movement>> observable = loadMovementsUseCase.LoadAllMovements();
+            observable.subscribe((new SingleObserver<List<Movement>>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+                }
+
+                @Override
+                public void onSuccess(@NonNull List<Movement> movements) {
+                    returnMovementsFromLocalOrRemoteDatabase(movements);
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+                    pickExerciseFragmentListener.ToastError(e.getMessage());
+                }
+            }));
         }
     }
 
