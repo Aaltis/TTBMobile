@@ -20,7 +20,8 @@ public interface MovementDAO extends BaseDAO<Movement> {
     @Query("SELECT * FROM Movements where name=:name LIMIT 1")
     Movement getMovementWithName(String name);
 
-    @Query("SELECT * FROM Movements where name like :name")
+    //room is dumdum.
+    @Query("SELECT * FROM Movements where name LIKE '%' || :name || '%'")
     Single<List<Movement>>  getMovementsWithNameLike(String name);
 
     @Query("SELECT * FROM Movements")

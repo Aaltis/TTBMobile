@@ -2,21 +2,16 @@ package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment
 
 import java.util.List;
 
+import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Movement;
+import fi.breakwaterworks.networking.Datasource;
 import fi.breakwaterworks.trackthatbarbellmobile.common.ObservableViewMvc;
 
 public interface MovementsListViewMvc extends ObservableViewMvc<MovementsListViewMvc.Listener> {
 
-    public interface Listener {
+    interface Listener {
         void onMovementClicked(Movement movement);
-
-        void onSearchQuerySubmitted(String query);
+        void onError(String errorText);
     }
-
-    void bindMovements(List<Movement> questions);
-
-    void showProgressIndication();
-
-    void hideProgressIndication();
 
 }

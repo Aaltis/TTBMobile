@@ -19,7 +19,8 @@ import fi.breakwaterworks.trackthatbarbellmobile.common.BaseFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.common.onBackPressedListener;
 
 public class DoWorkoutFragment extends
-        BaseFragment implements onBackPressedListener, ExerciseListViewMvc.Listener {
+        BaseFragment implements onBackPressedListener,
+        ExerciseListViewMvc.Listener{
     private ExerciseListViewMvc mViewMvc;
     public DoWorkoutFragment.Listener DoWorkoutFragmentListener;
     public Activity parentActivity;
@@ -29,9 +30,17 @@ public class DoWorkoutFragment extends
         parentActivity = doWorkoutActivity;
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
+
     public interface Listener {
         void ChangeToPickMovementFragment();
+
         void saveWorkout();
+
         void deleteExercise(Exercise exercise);
     }
 
@@ -77,10 +86,6 @@ public class DoWorkoutFragment extends
         }*/
     }
 
-    @Override
-    public boolean onBackPressed() {
-        return false;
-    }
 
     @Override
     public void onOpenAddMovementsClicked() {
@@ -100,4 +105,6 @@ public class DoWorkoutFragment extends
     public void bindExercises(List<Exercise> exercises) {
         mViewMvc.bindExercises(exercises);
     }
+
+
 }

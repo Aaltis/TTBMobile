@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import fi.breakwaterworks.networking.Datasource;
+
 @Entity(tableName = "config")
 public class Config {
 
@@ -17,11 +19,17 @@ public class Config {
 
     protected String token;
 
+    //LOCAL OR REMOTE
+    private String DefaultDataSource;
+
     protected boolean saveAlwaysLocally;
 
     protected boolean saveAlwaysRemote;
 
     public Config() {
+    }
+    public Config(Datasource local) {
+        this.setDefaultDataSource(local.toString());
     }
     public Config(String token,String url) {
         this.token = token;
@@ -57,6 +65,13 @@ public class Config {
         return saveAlwaysLocally;
     }
 
+    public void setDefaultDataSource(String defaultDataSource) {
+        DefaultDataSource = defaultDataSource;
+    }
+    public String getDefaultDataSource() {
+        return DefaultDataSource;
+    }
+
     public void setSaveAlwaysLocally(boolean saveAlwaysLocally) {
         this.saveAlwaysLocally = saveAlwaysLocally;
     }
@@ -67,6 +82,15 @@ public class Config {
 
     public void setSaveAlwaysRemote(boolean saveAlwaysRemote) {
         this.saveAlwaysRemote = saveAlwaysRemote;
+    }
+
+    public Datasource getDataSource(){
+        if (!DefaultDataSource.isEmpty()) {
+            return Datasource.valueOf(DefaultDataSource);
+        }
+        else{
+            return Datasource.LOCAL;
+        }
     }
 
 }

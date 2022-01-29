@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "90224b377904ac42dfaea08f6658f60a",
+    "identityHash": "0d36a1b125f89ff3fbbe8b454fc6f178",
     "entities": [
       {
         "tableName": "users",
@@ -460,7 +460,7 @@
       },
       {
         "tableName": "config",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`config_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverUrl` TEXT, `token` TEXT, `saveAlwaysLocally` INTEGER NOT NULL, `saveAlwaysRemote` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`config_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverUrl` TEXT, `token` TEXT, `DefaultDataSource` TEXT, `saveAlwaysLocally` INTEGER NOT NULL, `saveAlwaysRemote` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "configId",
@@ -477,6 +477,12 @@
           {
             "fieldPath": "token",
             "columnName": "token",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "DefaultDataSource",
+            "columnName": "DefaultDataSource",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -505,7 +511,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"90224b377904ac42dfaea08f6658f60a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0d36a1b125f89ff3fbbe8b454fc6f178\")"
     ]
   }
 }

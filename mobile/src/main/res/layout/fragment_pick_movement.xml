@@ -8,6 +8,49 @@
 
     tools:context=".DoWorkout.PickExerciseFragment.view.PickMovementFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radioGroupDataSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/default_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <RadioButton android:id="@+id/radio_remote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote"
+                android:textColor="@color/colormaintext"/>
+            <RadioButton android:id="@+id/radio_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/local"
+                android:textColor="@color/colormaintext"
+                android:buttonTint="@color/colormaintext"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textviewMovementDataSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DataSource:"
+            android:textColor="@color/colormaintext"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/radioGroupDataSource"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <SearchView
         android:id="@+id/searchview_movements"
         android:layout_width="match_parent"
@@ -15,7 +58,7 @@
         android:layout_margin="8dp"
         android:background="@color/colormainbackground"
         android:numColumns="1"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout"
         tools:layout_editor_absoluteX="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -22,4 +22,9 @@ public class LoadMovementsUseCase {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+    public Single<List<Movement>> LoadMovementsWithName(String query) {
+        return  ttbDatabase.movementDAO().getMovementsWithNameLike(query)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

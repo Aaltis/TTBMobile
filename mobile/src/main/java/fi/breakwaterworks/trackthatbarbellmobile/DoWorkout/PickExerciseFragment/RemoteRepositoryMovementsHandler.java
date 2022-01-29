@@ -7,7 +7,6 @@ import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.networking.server.MovementsService;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
-import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.view.PickMovementFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,51 +16,52 @@ public class RemoteRepositoryMovementsHandler {
 
     Listener listener;
 
-    public RemoteRepositoryMovementsHandler(PickMovementFragment pickMovementFragment, Config config) {
-        this.listener = pickMovementFragment;
-        movementsService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(MovementsService.class);
+    public RemoteRepositoryMovementsHandler(Listener listener, String serverUrl) {
+        this.listener = listener;
+        movementsService = RetrofitClientInstance.getRetrofitInstance(serverUrl).create(MovementsService.class);
     }
 
     public interface Listener {
-        void onError(String errorText);
-        void returnMovementsFromLocalOrRemoteDatabase(List<Movement> movements);
+        void onRemoteError(String errorText);
+
+        void returnMovementsFromRemoteDatabase(List<Movement> movements);
     }
 
     public void loadMovements() {
 
         if (movementsService == null) {
-            this.listener.onError("Missing remote url");
+            this.listener.onRemoteError("Missing remote url");
         }
 
         Call<List<Movement>> call = movementsService.getAllMovements();
         call.enqueue(new Callback<List<Movement>>() {
             @Override
             public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                listener.returnMovementsFromLocalOrRemoteDatabase(response.body());
+                listener.returnMovementsFromRemoteDatabase(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Movement>> call, Throwable t) {
-                listener.onError(t.getMessage());
+                listener.onRemoteError(t.getMessage());
             }
         });
     }
 
-    public void onSearchQuerySubmitted(String query) {
+    public void LoadMovementsWithNameLike(String query) {
         if (movementsService == null) {
-            listener.onError("Missing remote url");
+            listener.onRemoteError("Missing remote url");
             return;
         }
         Call<List<Movement>> call = movementsService.getMovementsWithName(query);
         call.enqueue(new Callback<List<Movement>>() {
             @Override
             public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                listener.returnMovementsFromLocalOrRemoteDatabase(response.body());
+                listener.returnMovementsFromRemoteDatabase(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Movement>> call, Throwable t) {
-                listener.onError(t.getMessage());
+                listener.onRemoteError(t.getMessage());
             }
 
         });

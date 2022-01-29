@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
@@ -31,7 +30,8 @@ import retrofit2.Response;
 
 public class DoWorkoutActivity extends FragmentActivity
         implements DoWorkoutFragment.Listener,
-        PickMovementFragment.Listener {
+        PickMovementFragment.Listener,
+        LeaveWorkoutDialog.LeaveWorkoutDialogListener {
 
     private WorkoutService workoutService;
     ConfigRepository configRepository;
@@ -39,6 +39,7 @@ public class DoWorkoutActivity extends FragmentActivity
     private static final String FIND_MOVEMENT_FRAGMENT_TAG = "FindMovementFragment";
     LoadConfigUseCase loadConfigUseCase;
     private String token;
+    public LeaveWorkoutDialog leaveWorkoutDialog;
 
     //TODO what could be better way to store this?
     private List<Exercise> exercises;
@@ -49,6 +50,9 @@ public class DoWorkoutActivity extends FragmentActivity
         exercises = new ArrayList();
         setContentView(R.layout.do_workout_activity);
         loadConfigAndInitRetrofit();
+
+        leaveWorkoutDialog = new LeaveWorkoutDialog(this);
+        leaveWorkoutDialog.mListener = this;
 
         configRepository = new ConfigRepository(this);
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
@@ -72,7 +76,7 @@ public class DoWorkoutActivity extends FragmentActivity
 
             @Override
             public void onSuccess(@NonNull Config config) {
-                if (!Objects.requireNonNull(config.getServerUrl()).isEmpty()) {
+                if (config.getServerUrl() != null) {
                     workoutService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(WorkoutService.class);
                 }
                 token = config.getToken();
@@ -121,6 +125,8 @@ public class DoWorkoutActivity extends FragmentActivity
         PickMovementFragment movementFragment = (PickMovementFragment) getSupportFragmentManager().findFragmentByTag(FIND_MOVEMENT_FRAGMENT_TAG);
         if (movementFragment != null && movementFragment.isVisible()) {
             hidePickMovementFragment();
+        } else {
+            leaveWorkoutDialog.show();
         }
     }
 
@@ -181,13 +187,19 @@ public class DoWorkoutActivity extends FragmentActivity
         ft.commit();
     }
 
-    /*public void refreshMovementsInMovementFragment(List<Movement> movements) {
-        PickMovementFragment fragment = (PickMovementFragment) getSupportFragmentManager().findFragmentByTag(FIND_MOVEMENT_FRAGMENT_TAG);
-        if (fragment != null) {
-            fragment.bindMovements(movements);
+    // Backbutton pressing shows dialog, these handle dialog return.
+    @Override
+    public void saveWorkoutAndExit(boolean save) {
+        if (save) {
+            saveWorkout();
         }
+        this.finish();
+    }
 
-    }*/
+    @Override
+    public void cancel() {
+        leaveWorkoutDialog.hide();
+    }
 }
 
 

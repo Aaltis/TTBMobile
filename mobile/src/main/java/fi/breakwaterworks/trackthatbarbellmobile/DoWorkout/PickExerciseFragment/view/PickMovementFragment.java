@@ -10,6 +10,7 @@ import java.util.List;
 
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Movement;
+import fi.breakwaterworks.networking.Datasource;
 import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
 import fi.breakwaterworks.networking.local.usecase.LoadMovementsUseCase;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.RemoteRepositoryMovementsHandler;
@@ -20,12 +21,9 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 public class PickMovementFragment extends BaseFragment implements
-        MovementsListViewMvc.Listener,
-        RemoteRepositoryMovementsHandler.Listener {
+        MovementsListViewMvc.Listener {
 
     public Listener pickExerciseFragmentListener;
-    private RemoteRepositoryMovementsHandler remoteRepositoryMovementsHandler;
-
 
     public interface Listener {
         void onMovementClicked(Movement movement);
@@ -56,61 +54,6 @@ public class PickMovementFragment extends BaseFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        loadConfigAndInitRetrofit();
-    }
-
-    private void loadConfigAndInitRetrofit() {
-        LoadConfigUseCase loadConfigUseCase = new LoadConfigUseCase(getContext());
-        Single<Config> observable = loadConfigUseCase.Load();
-        observable.subscribe((new SingleObserver<Config>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-            }
-
-            @Override
-            public void onSuccess(@NonNull Config config) {
-                CallLoadMovementsFromLocalOrRemoteDatabase(config);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                CallLoadMovementsFromLocalOrRemoteDatabase(null);
-            }
-        }));
-    }
-
-    /**
-     * We load movements from remote or local database
-     * return to retunrMovements
-     */
-    private void CallLoadMovementsFromLocalOrRemoteDatabase(Config config) {
-        if (config != null && config.getServerUrl() != null) {
-            remoteRepositoryMovementsHandler = new RemoteRepositoryMovementsHandler(this, config);
-            remoteRepositoryMovementsHandler.loadMovements();
-        } else {
-            LoadMovementsUseCase loadMovementsUseCase = new LoadMovementsUseCase(getContext());
-            Single<List<Movement>> observable = loadMovementsUseCase.LoadAllMovements();
-            observable.subscribe((new SingleObserver<List<Movement>>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-                }
-
-                @Override
-                public void onSuccess(@NonNull List<Movement> movements) {
-                    returnMovementsFromLocalOrRemoteDatabase(movements);
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    pickExerciseFragmentListener.ToastError(e.getMessage());
-                }
-            }));
-        }
-    }
-
-    @Override
-    public void returnMovementsFromLocalOrRemoteDatabase(List<Movement> movements) {
-        viewMvc.bindMovements(movements);
     }
 
     @Override
@@ -119,14 +62,8 @@ public class PickMovementFragment extends BaseFragment implements
     }
 
     @Override
-    public void onSearchQuerySubmitted(String query) {
-        remoteRepositoryMovementsHandler.onSearchQuerySubmitted(query);
-    }
-
-    @Override
     public void onError(String errorText) {
         pickExerciseFragmentListener.ToastError(errorText);
     }
-
 
 }

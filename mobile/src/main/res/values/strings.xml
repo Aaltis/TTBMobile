@@ -31,4 +31,6 @@
     <string name="config_checkbox_save_training_remote">Save Training Remote Always</string>
     <string name="config_checkbox_save_training_locally">Save Training Locally Always</string>
     <string name="config_button_save">Save</string>
+    <string name="remote">Remote</string>
+    <string name="local">Local</string>
 </resources>
