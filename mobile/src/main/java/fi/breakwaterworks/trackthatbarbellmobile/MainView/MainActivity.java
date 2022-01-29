@@ -7,15 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.jakewharton.rxbinding3.view.RxView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jakewharton.rxbinding3.view.RxView;
+
+import fi.breakwaterworks.mvibase.MviView;
 import fi.breakwaterworks.trackthatbarbellmobile.Config.ConfigActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList.WorkoutTemplatesListActivity;
-import fi.breakwaterworks.mvibase.MviView;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -24,11 +24,13 @@ public class MainActivity extends AppCompatActivity implements MviView<MainActiv
     private MainActivityPresenter mainActivityPresenter;
     Button buttonWorkoutTemplates;
     Button buttonDoWorkout;
+    LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loadingDialog = new LoadingDialog(this);
         this.buttonWorkoutTemplates = findViewById(R.id.btnWorkoutTemplates);
         this.buttonDoWorkout = findViewById(R.id.btnDoWorkout);
         mainActivityPresenter = new MainActivityPresenter(MainActivity.this);
@@ -68,11 +70,12 @@ public class MainActivity extends AppCompatActivity implements MviView<MainActiv
             context.startActivity(intent);
         }
         if (viewState instanceof MainActivityViewState.DatabaseSave.Init) {
-            Log.d(this.getLocalClassName(), "working ");
+            loadingDialog.show();
         }
 
         if (viewState instanceof MainActivityViewState.DatabaseSave.Success) {
             Log.d(this.getLocalClassName(), ((MainActivityViewState.DatabaseSave.Success) viewState).message);
+            runOnUiThread(() -> loadingDialog.hide());
         }
         if (viewState instanceof MainActivityViewState.DatabaseSave.Error) {
             Log.e(this.getLocalClassName(), ((MainActivityViewState.DatabaseSave.Error) viewState).error.getLocalizedMessage());
