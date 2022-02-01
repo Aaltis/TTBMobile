@@ -47,7 +47,7 @@ public class SetRepsWeight {
     }
 
     @Ignore
-    public SetRepsWeight(int sets, int reps, long weight) {
+    public SetRepsWeight(int sets, int reps, double weight) {
         super();
         this.setOrderNumber(1);
         this.setSets(sets);

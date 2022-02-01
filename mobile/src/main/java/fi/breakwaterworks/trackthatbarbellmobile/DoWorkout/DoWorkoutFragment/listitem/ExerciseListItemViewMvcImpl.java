@@ -73,11 +73,9 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
 
 
     @Override
-    public Void setSetRepsWeightToExercise(String set, String reps, String weight) {
-        if (set.isEmpty()) {
-            set = "0";
-        }
-        mExercise.AddToSetRepsWeights((new SetRepsWeight(Integer.parseInt(set), Integer.parseInt(reps), Long.parseLong(weight))));
+    public Void setSetRepsWeightToExercise(List<SetRepsWeight> setRepsWeightList) {
+
+        mExercise.AddToSetRepsWeights(setRepsWeightList);
         refreshSetRepsWeightList(mExercise.getSetRepsWeights());
         return null;
     }

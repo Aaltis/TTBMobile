@@ -189,18 +189,21 @@ public class Exercise {
     /**
      * If latest is same reps and weigh, add it to previous set.
      *
-     * @param latest
+     * @param setRepsWeightList
      */
-    public void AddToSetRepsWeights(SetRepsWeight latest) {
+    public void AddToSetRepsWeights(List<SetRepsWeight> setRepsWeightList) {
         if (setRepsWeights.size() == 0) {
-            this.setRepsWeights.add(latest);
+            this.setRepsWeights.addAll(setRepsWeightList);
             return;
         }
-        SetRepsWeight previous = this.setRepsWeights.get(this.setRepsWeights.size() - 1);
-        if (previous.getReps() == latest.getReps() && previous.getWeight() == latest.getWeight()) {
-            previous.setSets(previous.getSets() + 1);
-        } else {
-            this.setRepsWeights.add(latest);
+        for (SetRepsWeight latest : setRepsWeightList) {
+            SetRepsWeight previous = this.setRepsWeights.get(this.setRepsWeights.size() - 1);
+            if (previous.getReps() == latest.getReps() && previous.getWeight() == latest.getWeight()) {
+                previous.setSets(previous.getSets() + 1);
+            } else {
+                this.setRepsWeights.add(latest);
+            }
         }
+
     }
 }

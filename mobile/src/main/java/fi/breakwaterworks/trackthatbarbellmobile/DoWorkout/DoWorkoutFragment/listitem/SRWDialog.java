@@ -3,30 +3,37 @@ package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.li
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.listitem.ExerciseListItemViewMvcImpl;
-import fi.breakwaterworks.trackthatbarbellmobile.R;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SRWDialog extends Dialog implements
-        android.view.View.OnClickListener {
+import fi.breakwaterworks.model.ExerciseType;
+import fi.breakwaterworks.model.SetRepsWeight;
+import fi.breakwaterworks.trackthatbarbellmobile.R;
+import fi.breakwaterworks.trackthatbarbellmobile.databinding.SrwDialogBinding;
+
+public class SRWDialog extends Dialog {
 
     public Activity activity;
-    public Button btnAdd;
-    public EditText editText_set;
-    public EditText editText_reps;
-    public EditText editText_weight;
-    public TextView textView_error;
 
+    private List<SetRepsWeight> setRepsWeightList;
     public AddClickListener mListener;
+    public int spinnerPosition;
 
     public SRWDialog(Activity activity) {
         super(activity);
         this.activity = activity;
+        setRepsWeightList = new ArrayList<>();
     }
 
     @Override
@@ -34,27 +41,92 @@ public class SRWDialog extends Dialog implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.srw_dialog);
-        editText_set = findViewById(R.id.srw_dialog_edittext_set);
-        editText_reps = findViewById(R.id.srw_dialog_edittext_reps);
-        editText_weight = findViewById(R.id.srw_dialog_edittext_weight);
-        textView_error = findViewById(R.id.srw_dialog_text_view_error);
+        SrwDialogBinding binding = SrwDialogBinding.inflate(LayoutInflater.from(getContext()));
+        setContentView(binding.getRoot());
 
-        btnAdd = findViewById(R.id.srw_dialog_add_btn);
-        btnAdd.setOnClickListener(this);
+        Button btnMultiple = findViewById(R.id.button_add_multiple);
+        btnMultiple.setOnClickListener(v -> {
+            binding.srwDialogPlusButton.setVisibility(View.VISIBLE);
+            binding.buttonAddMultiple.setVisibility(View.INVISIBLE);
+        });
+
+
+        binding.spinnerType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, ExerciseType.values()));
+        binding.spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
+                spinnerPosition = position;
+                ExerciseType selected_val = (ExerciseType) binding.spinnerType.getItemAtPosition(position);
+                if (selected_val.isMultiset()) {
+                    binding.srwDialogPlusButton.setVisibility(View.VISIBLE);
+                    binding.buttonAddMultiple.setVisibility(View.INVISIBLE);
+                } else {
+                    binding.srwDialogPlusButton.setVisibility(View.INVISIBLE);
+                    binding.buttonAddMultiple.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        binding.srwDialogPlusButton.setOnClickListener(v -> {
+            if (binding.srwDialogEdittextReps.getText().toString().isEmpty() || binding.srwDialogEdittextWeight.getText().toString().isEmpty()) {
+                binding.srwDialogTextViewError.setText("Write atleast reps and weight.");
+                return;
+            }
+
+            setRepsWeightList.add(new SetRepsWeight(Integer.parseInt(binding.srwDialogEdittextSet.getText().toString()),
+                    Integer.parseInt(binding.srwDialogEdittextReps.getText().toString()),
+                    Integer.parseInt(binding.srwDialogEdittextWeight.getText().toString())));
+
+            refreshList(binding);
+
+        });
+
+        binding.srwDialogButtonSave.setOnClickListener(v -> {
+            ExerciseType exerciseType = (ExerciseType) binding.spinnerType.getItemAtPosition(spinnerPosition);
+            if (exerciseType != null && exerciseType.isMultiset()) {
+                mListener.setSetRepsWeightToExercise(setRepsWeightList);
+            }
+
+            if (binding.srwDialogEdittextReps.getText().toString().isEmpty() || binding.srwDialogEdittextWeight.getText().toString().isEmpty()) {
+                binding.srwDialogTextViewError.setText("Write atleast reps and weight.");
+                return;
+            }
+
+            setRepsWeightList.add(new SetRepsWeight(Integer.parseInt(binding.srwDialogEdittextSet.getText().toString()),
+                    Integer.parseInt(binding.srwDialogEdittextReps.getText().toString()),
+                    Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString())
+            ));
+            mListener.setSetRepsWeightToExercise(setRepsWeightList);
+
+            dismiss();
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        if (editText_reps.getText().toString().isEmpty() || editText_weight.getText().toString().isEmpty()) {
-            textView_error.setText("Write atleast reps and weight.");
-            return;
+    private void refreshList(SrwDialogBinding binding) {
+        binding.linearLayoutSrwList.removeAllViews();
+
+        for (SetRepsWeight setRepsWeight : setRepsWeightList) {
+            final LinearLayout newSRWItemLayout = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.srw_dialog_multiple_item, null);
+            newSRWItemLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            final TextView srwTextView = newSRWItemLayout.findViewById(R.id.srw_dialog_multiple_item_textview);
+            Button remove = newSRWItemLayout.findViewById(R.id.srw_dialog_remove_list_item_button);
+            remove.setOnClickListener(v1 -> {
+                        setRepsWeightList.remove(setRepsWeight);
+                        refreshList(binding);
+                    }
+            );
+
+            srwTextView.setGravity(Gravity.CENTER);
+            srwTextView.setText(setRepsWeight.getAsString());
+            binding.linearLayoutSrwList.addView(newSRWItemLayout);
+
         }
-
-        mListener.setSetRepsWeightToExercise(editText_set.getText().toString(),
-                editText_reps.getText().toString(),
-                editText_weight.getText().toString());
-
-        dismiss();
     }
 
     public void bindListener(ExerciseListItemViewMvcImpl receiver) {
@@ -63,7 +135,7 @@ public class SRWDialog extends Dialog implements
     }
 
     public interface AddClickListener {
-        Void setSetRepsWeightToExercise(String set, String reps, String weight);
+        Void setSetRepsWeightToExercise(List<SetRepsWeight> setRepsWeightList);
     }
 
 }
