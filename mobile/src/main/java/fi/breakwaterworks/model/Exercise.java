@@ -198,7 +198,8 @@ public class Exercise {
         }
         for (SetRepsWeight latest : setRepsWeightList) {
             SetRepsWeight previous = this.setRepsWeights.get(this.setRepsWeights.size() - 1);
-            if (previous.getReps() == latest.getReps() && previous.getWeight() == latest.getWeight()) {
+            if (previous.getReps() == latest.getReps() && previous.getWeight() == latest.getWeight()
+            && previous.getExerciseType() == latest.getExerciseType()) {
                 previous.setSets(previous.getSets() + 1);
             } else {
                 this.setRepsWeights.add(latest);

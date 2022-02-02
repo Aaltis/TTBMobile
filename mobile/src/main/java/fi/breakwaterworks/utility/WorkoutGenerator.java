@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
+import fi.breakwaterworks.model.ExerciseType;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.model.WorkLog;
@@ -55,16 +56,17 @@ public class WorkoutGenerator {
     //TODO 3. Check database for Exercise with same movement, sets and reps with success. return.
     private Exercise CalculateStraightSet(List<Movement> movements, Exercise exercise) {
         Movement userGivenMovement = movements.stream().filter(movement -> exercise.getMovementName().equals(movement.getName())).findAny().orElse(null);
-        long weight;
+        double weight;
         if (userGivenMovement.getReps() == exercise.getSetRepsWeights().get(0).getReps()) {
-            weight = (long) exercise.getSetRepsWeights().get(0).getWeight();
+            weight = exercise.getSetRepsWeights().get(0).getWeight();
         } else {
             weight = OneRepCalculator.calculateRepMax(userGivenMovement.getReps(), userGivenMovement.getWeight(), exercise.getSetRepsWeights().get(0).getReps());
         }
         return new Exercise(exercise.getOrderNumber(),
                 exercise.getMovement(),
                 new SetRepsWeight(exercise.getSetRepsWeights().get(0).getSets(),
-                        exercise.getSetRepsWeights().get(0).getReps(), weight));
+                        exercise.getSetRepsWeights().get(0).getReps(),
+                        weight, ExerciseType.STRAIGHT_SET));
     }
 
 }

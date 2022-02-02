@@ -5,6 +5,7 @@ import androidx.room.*;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import fi.breakwaterworks.networking.local.Converters;
 @Entity(tableName = "set_reps_weights",
         foreignKeys = @ForeignKey(entity = Exercise.class,
                 parentColumns = "exercise_id",
@@ -12,6 +13,7 @@ import static androidx.room.ForeignKey.CASCADE;
                 onDelete = CASCADE),
         indices = {@Index("set_reps_weight_id"),
                 @Index("parent_exercise_id")})
+@TypeConverters(Converters.class)
 public class SetRepsWeight {
 
     @NonNull
@@ -33,6 +35,7 @@ public class SetRepsWeight {
     private boolean success;
     private int reps;
     private int sets;
+    private ExerciseType exerciseType;
 
     public SetRepsWeight() {
     }
@@ -47,12 +50,13 @@ public class SetRepsWeight {
     }
 
     @Ignore
-    public SetRepsWeight(int sets, int reps, double weight) {
+    public SetRepsWeight(int sets, int reps, double weight, ExerciseType exerciseType) {
         super();
         this.setOrderNumber(1);
         this.setSets(sets);
         this.setReps(reps);
         this.setWeight(weight);
+        this.exerciseType = exerciseType;
         this.setWeightUnit("kg");
     }
 
@@ -143,16 +147,28 @@ public class SetRepsWeight {
         this.success = success;
     }
 
+    public ExerciseType getExerciseType() {
+        return exerciseType;
+    }
+
+    public void setExerciseType(ExerciseType exerciseType) {
+        this.exerciseType = exerciseType;
+    }
+
     public String getAsString() {
         StringBuilder builder = new StringBuilder();
+
         if (getSets() != 0) {
             builder.append(getSets());
             builder.append("x");
         }
-        builder.append(getReps());
-        builder.append("x");
 
-        builder.append(getWeight());
+        builder.append(getReps());
+
+        if (getWeight() != 0) {
+            builder.append("x");
+            builder.append(getWeight());
+        }
         return builder.toString();
     }
 }

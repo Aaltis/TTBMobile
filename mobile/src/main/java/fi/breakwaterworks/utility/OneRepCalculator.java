@@ -2,7 +2,7 @@ package fi.breakwaterworks.utility;
 
 public class OneRepCalculator {
 
-    private static long calculateRepMaxFromOneRepMax(int reps, long weight) {
+    private static double calculateRepMaxFromOneRepMax(int reps, double weight) {
         switch (reps) {
             case 1:
                 return weight;
@@ -32,37 +32,37 @@ public class OneRepCalculator {
         return 0;
     }
 
-    public static long calculateOneRepMax(int reps, long weight) {
+    public static double calculateOneRepMax(int reps, double weight) {
         switch (reps) {
             case 1:
                 return weight;
             case 2:
-                return (long) (weight * 1.05);
+                return (double) (weight * 1.05);
             case 3:
-                return (long) (weight * 1.07);
+                return (double) (weight * 1.07);
             case 4:
-                return (long) (weight * 1.1);
+                return (double) (weight * 1.1);
             case 5:
-                return (long) (weight * 1.13);
+                return (double) (weight * 1.13);
             case 6:
-                return (long) (weight * 1.15);
+                return (double) (weight * 1.15);
             case 7:
-                return (long) (weight * 1.17);
+                return (double) (weight * 1.17);
             case 8:
-                return (long) (weight * 1.2);
+                return (double) (weight * 1.2);
             case 9:
-                return (long) (weight * 1.23);
+                return (double) (weight * 1.23);
             case 10:
-                return (long) (weight * 1.25);
+                return (double) (weight * 1.25);
             case 11:
-                return (long) (weight * 1.27);
+                return (double) (weight * 1.27);
             case 12:
-                return (long) (weight * 1.3);
+                return (double) (weight * 1.3);
         }
         return 0;
     }
 
-    public static long calculateRepMax(int userDoneReps, long userDoneWeight, int wantedReps){
-        return calculateRepMaxFromOneRepMax(wantedReps ,calculateOneRepMax(userDoneReps,userDoneWeight));
+    public static double calculateRepMax(int userDoneReps, double userDoneWeight, int wantedReps){
+        return calculateRepMaxFromOneRepMax(wantedReps ,calculateOneRepMax(userDoneReps, userDoneWeight));
     }
 }

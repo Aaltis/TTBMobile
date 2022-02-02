@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0d36a1b125f89ff3fbbe8b454fc6f178",
+    "identityHash": "ee9b6279f0da8666d4e8717f4fb54b77",
     "entities": [
       {
         "tableName": "users",
@@ -363,7 +363,7 @@
       },
       {
         "tableName": "set_reps_weights",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`set_reps_weight_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_exercise_id` INTEGER, `orderNumber` INTEGER NOT NULL, `weight` REAL NOT NULL, `weight_unit` TEXT, `percentage_of_first_set` INTEGER, `success` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `sets` INTEGER NOT NULL, FOREIGN KEY(`parent_exercise_id`) REFERENCES `exercises`(`exercise_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`set_reps_weight_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_exercise_id` INTEGER, `orderNumber` INTEGER NOT NULL, `weight` REAL NOT NULL, `weight_unit` TEXT, `percentage_of_first_set` INTEGER, `success` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `sets` INTEGER NOT NULL, `exerciseType` TEXT, FOREIGN KEY(`parent_exercise_id`) REFERENCES `exercises`(`exercise_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "setRepsWeightId",
@@ -418,6 +418,12 @@
             "columnName": "sets",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "exerciseType",
+            "columnName": "exerciseType",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -511,7 +517,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0d36a1b125f89ff3fbbe8b454fc6f178\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ee9b6279f0da8666d4e8717f4fb54b77\")"
     ]
   }
 }

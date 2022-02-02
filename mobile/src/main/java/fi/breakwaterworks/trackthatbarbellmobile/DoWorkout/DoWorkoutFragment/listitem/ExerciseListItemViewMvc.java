@@ -8,7 +8,7 @@ import fi.breakwaterworks.trackthatbarbellmobile.common.ObservableViewMvc;
 
 public interface
 ExerciseListItemViewMvc extends ObservableViewMvc<ExerciseListItemViewMvc.Listener> {
-    void bindExercise(Exercise exercise);
+    void bindExerciseToListItemView(Exercise exercise);
     void refreshSetRepsWeightList(List<SetRepsWeight> setRepsWeightList);
 
     interface Listener {

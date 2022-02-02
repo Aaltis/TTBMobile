@@ -51,7 +51,7 @@ public class SRWDialog extends Dialog {
         });
 
 
-        binding.spinnerType.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, ExerciseType.values()));
+        binding.spinnerType.setAdapter(new ArrayAdapter<ExerciseType>(getContext(), android.R.layout.simple_spinner_item, ExerciseType.values()));
         binding.spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
@@ -81,7 +81,8 @@ public class SRWDialog extends Dialog {
 
             setRepsWeightList.add(new SetRepsWeight(Integer.parseInt(binding.srwDialogEdittextSet.getText().toString()),
                     Integer.parseInt(binding.srwDialogEdittextReps.getText().toString()),
-                    Integer.parseInt(binding.srwDialogEdittextWeight.getText().toString())));
+                    Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString()),
+                    (ExerciseType) binding.spinnerType.getItemAtPosition(spinnerPosition)));
 
             refreshList(binding);
 
@@ -93,15 +94,25 @@ public class SRWDialog extends Dialog {
                 mListener.setSetRepsWeightToExercise(setRepsWeightList);
             }
 
-            if (binding.srwDialogEdittextReps.getText().toString().isEmpty() || binding.srwDialogEdittextWeight.getText().toString().isEmpty()) {
-                binding.srwDialogTextViewError.setText("Write atleast reps and weight.");
+            if (binding.srwDialogEdittextReps.getText().toString().isEmpty() ) {
+                binding.srwDialogTextViewError.setText("Write atleast reps.");
                 return;
             }
 
-            setRepsWeightList.add(new SetRepsWeight(Integer.parseInt(binding.srwDialogEdittextSet.getText().toString()),
-                    Integer.parseInt(binding.srwDialogEdittextReps.getText().toString()),
-                    Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString())
-            ));
+            int sets=0;
+            int reps=0;
+            double weigh=0;
+
+            if(!binding.srwDialogEdittextSet.getText().toString().isEmpty()){
+                sets=Integer.parseInt(binding.srwDialogEdittextSet.getText().toString());
+            }
+            if(!binding.srwDialogEdittextReps.getText().toString().isEmpty()){
+                reps=Integer.parseInt(binding.srwDialogEdittextReps.getText().toString());
+            }
+            if(!binding.srwDialogEdittextWeight.getText().toString().isEmpty()){
+                weigh=Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString());
+            }
+            setRepsWeightList.add(new SetRepsWeight(sets, reps, weigh, exerciseType ));
             mListener.setSetRepsWeightToExercise(setRepsWeightList);
 
             dismiss();

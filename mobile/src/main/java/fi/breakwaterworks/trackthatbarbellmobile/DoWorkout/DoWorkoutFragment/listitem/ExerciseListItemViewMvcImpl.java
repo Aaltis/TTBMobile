@@ -14,7 +14,6 @@ import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.SetRepsWeight;
-import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.view.ExerciseListViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseObservableViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.common.ViewMvcFactory;
@@ -42,6 +41,10 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
 
         ExerciseListItemViewMvcImpl listenerBinding = this;
         buttonDelete.setOnClickListener(v -> {
+
+            //remove srw views so the don't come visible when this item is recycled.
+            mLinearLayoutSetRepsWeight.removeAllViews();
+
             for (ExerciseListItemViewMvc.Listener listener : getListeners()) {
                 listener.DeleteExercise(mExercise);
             }
@@ -55,7 +58,7 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
     }
 
     @Override
-    public void bindExercise(Exercise exercise) {
+    public void bindExerciseToListItemView(Exercise exercise) {
         mExercise = exercise;
         mTxtExerciseName.setText(exercise.getMovementName());
     }
@@ -65,8 +68,12 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
         mLinearLayoutSetRepsWeight.removeAllViews();
         for (SetRepsWeight srw : setRepsWeightList) {
             View viewSRWItem = mInflater.inflate(R.layout.srw_item, mViewGroup, false);
-            TextView view = viewSRWItem.findViewById(R.id.text_view_srw_item);
-            view.setText(srw.getAsString());
+
+            TextView textViewType = viewSRWItem.findViewById(R.id.text_view_exercise_list_srw_type);
+            textViewType.setText(srw.getExerciseType().toString());
+
+            TextView textViewSRWInText = viewSRWItem.findViewById(R.id.text_view_exercise_list_srw_in_text);
+            textViewSRWInText.setText(srw.getAsString());
             mLinearLayoutSetRepsWeight.addView(viewSRWItem);
         }
     }
@@ -74,7 +81,6 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
 
     @Override
     public Void setSetRepsWeightToExercise(List<SetRepsWeight> setRepsWeightList) {
-
         mExercise.AddToSetRepsWeights(setRepsWeightList);
         refreshSetRepsWeightList(mExercise.getSetRepsWeights());
         return null;

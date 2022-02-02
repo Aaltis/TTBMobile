@@ -63,7 +63,7 @@ public class ExerciseRecyclerAdapter extends RecyclerView.Adapter<ExerciseRecycl
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.mViewMvc.bindExercise(mExercises.get(position));
+        holder.mViewMvc.bindExerciseToListItemView(mExercises.get(position));
     }
 
     @Override
