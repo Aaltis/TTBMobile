@@ -15,12 +15,12 @@ public class MainActivityPresenter {
     private PublishSubject<MainActivityIntent> mIntentsSubject;
     @NonNull
     private Observable<MainActivityViewState> mStatesObservable;
-    public DatabaseInitiatorInterractor databaseInitiatorIterractor;
+    public DatabaseInitiatorInterractor databaseInitiatorIteractor;
 
     public MainActivityPresenter(Context context) {
         mIntentsSubject = PublishSubject.create();
         mStatesObservable = compose();
-        databaseInitiatorIterractor = new DatabaseInitiatorInterractor(context);
+        databaseInitiatorIteractor = new DatabaseInitiatorInterractor(context);
     }
 
     public Observable<MainActivityViewState> states() {

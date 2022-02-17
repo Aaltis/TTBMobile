@@ -7,8 +7,8 @@ import org.json.JSONException;
 import java.util.List;
 
 import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
-import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.model.WorkLog;
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 
 public class WorkoutTemplateInitiator {
     private Context context;

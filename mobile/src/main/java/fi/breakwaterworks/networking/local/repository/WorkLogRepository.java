@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import androidx.room.Transaction;
-import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.model.WorkLog;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.model.WorkoutCycle;
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 

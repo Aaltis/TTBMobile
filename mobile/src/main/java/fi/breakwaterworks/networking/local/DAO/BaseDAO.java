@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface BaseDAO<T> {
     @Insert
-    long insert (T entity);
+    Long insert (T entity);
 
     @Insert
     void insertList (List<T> entityList);

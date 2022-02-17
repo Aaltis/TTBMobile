@@ -1,12 +1,16 @@
 package fi.breakwaterworks.model;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.room.*;
+
 import static androidx.room.ForeignKey.CASCADE;
+
+import fi.breakwaterworks.networking.server.response.WorkoutCreatedResponse;
 
 @Entity(tableName = "workouts",
         foreignKeys = @ForeignKey(entity = WorkLog.class,
@@ -28,6 +32,17 @@ public class Workout {
     private String comment;
     private boolean template;
 
+
+    //used at finding from server;
+    private String unigueId;
+
+    public Workout(WorkoutCreatedResponse response) {
+        this.unigueId = response.getUnigueId();
+        this.name = response.getName();
+        this.date = response.getDate();
+        this.exercises = new ArrayList<>(response.getExercises());
+    }
+
     public boolean isOnGoing() {
         return onGoing;
     }
@@ -48,10 +63,12 @@ public class Workout {
     public Workout(Date date) {
         this.setDate(date);
     }
+
     @Ignore
     public Workout(List<Exercise> exercises) {
         this.exercises = exercises;
     }
+
     @Ignore
     public Workout(String name, List<Exercise> exercises, boolean template) {
         this.worklogId = worklogId;
@@ -118,6 +135,13 @@ public class Workout {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getUnigueId() {
+        return unigueId;
+    }
+
+    public void setUnigueId(String unigueId) {
+        this.unigueId = unigueId;
     }
 
 }

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import fi.breakwaterworks.DAO.SetRepsWeightDAO;
+import fi.breakwaterworks.networking.TTBDatabase;
 import fi.breakwaterworks.utility.WorkoutTemplateInitiator;
 
 /**

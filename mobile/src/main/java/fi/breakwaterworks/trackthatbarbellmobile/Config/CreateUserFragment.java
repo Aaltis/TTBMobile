@@ -69,10 +69,9 @@ public class CreateUserFragment extends Fragment {
         try {
             this.userService = RetrofitClientInstance.getRetrofitInstance(textViewServerUrl.getText().toString()).create(UserService.class);
         } catch (Exception ex) {
-            listener.toastMessage("bad url");
+            listener.toastMessage(ex.getMessage());
             return;
         }
-        String g = textViewServerUrl.getText().toString();
         Call<ServerResponse> call = userService.registerUser(new UserRegisterRequest(textViewUserName.getText().toString(),
                 textViewPassword.getText().toString(),
                 textViewRePassword.getText().toString()));

@@ -8,7 +8,7 @@ import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Single;
 
-class MovementRepository {
+public class MovementRepository {
     TTBDatabase database;
 
     public MovementRepository(Context context) {

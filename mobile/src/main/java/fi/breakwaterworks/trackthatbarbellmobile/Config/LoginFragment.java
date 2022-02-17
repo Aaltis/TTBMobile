@@ -104,7 +104,7 @@ public class LoginFragment extends Fragment {
             listener.toastMessage(ex.getMessage());
             return;
         }
-        Call<AuthenticationResponse> call= userService.loginUser(new AuthenticationRequest(
+        Call<AuthenticationResponse> call = userService.loginUser(new AuthenticationRequest(
                     username,
                     password));
 

@@ -1,21 +1,23 @@
 package fi.breakwaterworks.networking.local.DAO;
 
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
 
 import fi.breakwaterworks.model.Workout;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 
 @Dao
-public interface WorkoutDAO extends BaseDAO<Workout> {
+public interface WorkoutDAO  {
     @Query("select * from workouts where template = :templateValue")
     Flowable<List<Workout>> loadAllIncludingOrExcludingTemplates(boolean templateValue);
 
     @Query("select * from workouts where workout_id = :workoutId")
-    Workout loadWithId(String workoutId);
+    Workout loadWithId(long workoutId);
 
     @Query("select * from workouts where worklog_id = :worklogId")
     List<Workout> loadWithWorklogId(long worklogId);
@@ -31,4 +33,8 @@ public interface WorkoutDAO extends BaseDAO<Workout> {
 
     @Query("select * from workouts where onGoing = 'true' ")
     List<Workout> LoadUnfinushedWorkouts();
+
+    @Insert
+    long insert(Workout workout);
+
 }

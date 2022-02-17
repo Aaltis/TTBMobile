@@ -16,14 +16,12 @@ public class WorkoutTemplatesListActionProcessHolder {
 
     private ObservableTransformer<WorkoutTemplatesListAction.InitialTask, WorkoutTemplatesListResult.Load>
             loadTaskProcessor = actions -> actions.flatMap(action ->
-    {
-        return workLogRepository.loadAllTemplates()
-                .map(WorkoutTemplatesListResult.Load::success)
-                .onErrorReturn(WorkoutTemplatesListResult.Load::failure)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .startWith(WorkoutTemplatesListResult.Load.running());
-    });
+            workLogRepository.loadAllTemplates()
+                    .map(WorkoutTemplatesListResult.Load::success)
+                    .onErrorReturn(WorkoutTemplatesListResult.Load::failure)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .startWith(WorkoutTemplatesListResult.Load.running()));
     ObservableTransformer<WorkoutTemplatesListAction, WorkoutTemplatesListResult> actionProcessor =
             actions -> actions.publish(shared -> shared.ofType(WorkoutTemplatesListAction.InitialTask.class).compose(loadTaskProcessor)
             );
