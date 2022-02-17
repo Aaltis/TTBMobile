@@ -2,9 +2,9 @@ package fi.breakwaterworks.networking.local.repository;
 
 import android.content.Context;
 
-import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.SetRepsWeight;
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.utility.SetTypeEnum;
 
 public class ExerciseRepository {

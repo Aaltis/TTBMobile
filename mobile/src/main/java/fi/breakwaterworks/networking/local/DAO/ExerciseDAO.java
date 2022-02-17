@@ -32,6 +32,7 @@ public interface ExerciseDAO extends BaseDAO<Exercise> {
             " where exercises.setTypeEnum=:setTypeEnum and set_reps_weights.reps=:reps and set_reps_weights.sets=:sets and success=:success" +
             " order by set_reps_weights.weight")
     Exercise loadSuccessfullExerciseWithSetRepsWeight (SetTypeEnum setTypeEnum, long reps, long sets, boolean success);
+
     @Insert
-    long insert(Exercise exercise);
+    Long insert(Exercise exercise);
 }

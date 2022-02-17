@@ -18,7 +18,7 @@ public class ConfigRepository {
         return database.ConfigDAO().loadConfigs();
     }
 
-    public long saveToken(Config config) {
-        return database.ConfigDAO().insert(config);
+    public void saveToken(Config config) {
+        database.ConfigDAO().insert(config);
     }
 }

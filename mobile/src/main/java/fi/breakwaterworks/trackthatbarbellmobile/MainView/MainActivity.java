@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MviView<MainActiv
         try {
             mDisposables.add(mainActivityPresenter.states().subscribe(this::render));
             mainActivityPresenter.processIntents(intents());
-            mainActivityPresenter.databaseInitiatorIterractor.initDatabase().subscribe(state -> this.render(state));
+            mainActivityPresenter.databaseInitiatorIteractor.initDatabase().subscribe(state -> this.render(state));
         } catch (Exception ex) {
             Log.d(this.getLocalClassName(), ex.getLocalizedMessage());
         }

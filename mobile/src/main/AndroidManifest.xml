@@ -36,12 +36,6 @@
             android:label="@string/title_activity_workout_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".WorkoutRunningActivity"
-            android:label="@string/title_activity_workout_running"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".WorkoutTemplateInitialization.WorkoutTemplateInitializationActivity"
             android:label="@string/title_activity_workout_template_initialization"

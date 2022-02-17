@@ -40,6 +40,12 @@ public class ExerciseListViewMvcImpl extends BaseObservableViewMvc<ExerciseListV
                 listener.saveWorkout();
             }
         });
+
+        findViewById(R.id.btnSaveExercise).setOnClickListener(view1 -> {
+            for (ExerciseListViewMvc.Listener listener : getListeners()) {
+                listener.saveWorkout();
+            }
+        });
     }
 
     @Override

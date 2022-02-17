@@ -1,5 +1,7 @@
 package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,13 +15,19 @@ import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.Workout;
+import fi.breakwaterworks.mvibase.MviView;
 import fi.breakwaterworks.networking.local.repository.ConfigRepository;
 import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
 import fi.breakwaterworks.networking.server.WorkoutService;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutFragment;
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutIntent;
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoWorkoutViewState;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.view.PickMovementFragment;
+import fi.breakwaterworks.trackthatbarbellmobile.MainView.MainActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
+import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList.WorkoutTemplatesListActivity;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
@@ -31,7 +39,8 @@ import retrofit2.Response;
 public class DoWorkoutActivity extends FragmentActivity
         implements DoWorkoutFragment.Listener,
         PickMovementFragment.Listener,
-        LeaveWorkoutDialog.LeaveWorkoutDialogListener {
+        LeaveWorkoutDialog.LeaveWorkoutDialogListener,
+        MviView<DoWorkoutIntent, DoWorkoutViewState> {
 
     private WorkoutService workoutService;
     ConfigRepository configRepository;
@@ -42,7 +51,7 @@ public class DoWorkoutActivity extends FragmentActivity
     public LeaveWorkoutDialog leaveWorkoutDialog;
 
     //TODO what could be better way to store this?
-    private List<Exercise> exercises;
+    public List<Exercise> exercises;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +64,11 @@ public class DoWorkoutActivity extends FragmentActivity
         leaveWorkoutDialog.mListener = this;
 
         configRepository = new ConfigRepository(this);
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-        DoWorkoutFragment fragment = new DoWorkoutFragment(this);
-        if (savedInstanceState != null) {
-            fragment = (DoWorkoutFragment) getSupportFragmentManager().findFragmentById(R.id.do_workout_framelayout);
-        }
-        fragment.DoWorkoutFragmentListener = this;
-        ft.replace(R.id.do_workout_framelayout, fragment, DO_WORKOUT_FRAGMENT_TAG);
-        ft.commit();
+
 
     }
 
+    //TODO move this to DoWorkoutFragment processholder and do in initialization
     private void loadConfigAndInitRetrofit() {
         loadConfigUseCase = new LoadConfigUseCase(this);
         Single<Config> observable = loadConfigUseCase.Load();
@@ -80,7 +83,9 @@ public class DoWorkoutActivity extends FragmentActivity
                     workoutService = RetrofitClientInstance.getRetrofitInstance(config.getServerUrl()).create(WorkoutService.class);
                 }
                 token = config.getToken();
+                initDoWorkout(config);
             }
+
 
             @Override
             public void onError(@NonNull Throwable e) {
@@ -88,6 +93,14 @@ public class DoWorkoutActivity extends FragmentActivity
         }));
     }
 
+    private void initDoWorkout(Config config) {
+        DoWorkoutFragment fragment = new DoWorkoutFragment(this, config);
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+
+        fragment.DoWorkoutFragmentListener = this;
+        ft.replace(R.id.do_workout_framelayout, fragment, DO_WORKOUT_FRAGMENT_TAG);
+        ft.commit();
+    }
 
     @Override
     public void onMovementClicked(Movement movement) {
@@ -143,19 +156,6 @@ public class DoWorkoutActivity extends FragmentActivity
             return;
         }
 
-        Call<List<String>> call = workoutService.saveWorkoutForUser(token, new Workout(exercises));
-        call.enqueue(new Callback<List<String>>() {
-            @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                Toast.makeText(DoWorkoutActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
-                Toast.makeText(DoWorkoutActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-        });
     }
 
     @Override
@@ -165,6 +165,13 @@ public class DoWorkoutActivity extends FragmentActivity
         if (fragment != null) {
             fragment.bindExercises(exercises);
         }
+    }
+
+    @Override
+    public void WorkoutSaved() {
+        Context context = DoWorkoutActivity.this;
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
@@ -199,6 +206,21 @@ public class DoWorkoutActivity extends FragmentActivity
     @Override
     public void cancel() {
         leaveWorkoutDialog.hide();
+    }
+
+    @Override
+    public Observable<DoWorkoutIntent> intents() {
+        return null;
+    }
+
+    @Override
+    public void render(DoWorkoutViewState state) {
+
+    }
+
+    @Override
+    public void bind() {
+
     }
 }
 

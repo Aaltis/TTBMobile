@@ -1,8 +1,8 @@
 package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,42 +12,52 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
+import fi.breakwaterworks.model.Workout;
+import fi.breakwaterworks.networking.local.repository.MovementRepository;
+import fi.breakwaterworks.networking.local.repository.WorkoutRepository;
+import fi.breakwaterworks.trackthatbarbellmobile.Schedulers.BaseSchedulerProvider;
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActionProcessHolder;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.view.ExerciseListViewMvc;
+import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.SchedulerProvider;
+
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.common.onBackPressedListener;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class DoWorkoutFragment extends
         BaseFragment implements onBackPressedListener,
-        ExerciseListViewMvc.Listener{
+        ExerciseListViewMvc.Listener {
     private ExerciseListViewMvc mViewMvc;
     public DoWorkoutFragment.Listener DoWorkoutFragmentListener;
-    public Activity parentActivity;
+    public DoWorkoutActivity parentActivity;
+    private Config config;
+    // Used to manage the data flow lifecycle and avoid memory leak.
+    private CompositeDisposable mDisposables = new CompositeDisposable();
+    DoWorkoutViewModel mViewModel;
 
-    public DoWorkoutFragment(DoWorkoutActivity doWorkoutActivity) {
+    private final PublishSubject<DoWorkoutIntent.SaveWorkout> saveWorkoutPublishSubject = PublishSubject.create();
+    private final PublishSubject<DoWorkoutIntent.LoadMovements> loadMovementsPublishSubject = PublishSubject.create();
+
+    public DoWorkoutFragment(DoWorkoutActivity doWorkoutActivity, Config config) {
         super();
         parentActivity = doWorkoutActivity;
+        this.config=config;
     }
 
     @Override
     public void onBackPressed() {
-
     }
-
 
     public interface Listener {
         void ChangeToPickMovementFragment();
-
         void saveWorkout();
-
         void deleteExercise(Exercise exercise);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mViewMvc.registerListener(this);
+        void WorkoutSaved();
     }
 
     @Nullable
@@ -57,8 +67,12 @@ public class DoWorkoutFragment extends
                              @Nullable Bundle savedInstanceState) {
         mViewMvc = getCompositionRoot().getViewMvcFactory().getExerciseListViewMvc(container, parentActivity);
         mViewMvc.registerListener(this);
+        mViewModel = new DoWorkoutViewModel(new DoWorkoutActionProcessHolder(
+                new WorkoutRepository(getContext(), config.getServerUrl()),
+                new MovementRepository(getContext()),
+                SchedulerProvider.getInstance()));
+        mDisposables = new CompositeDisposable();
         return mViewMvc.getRootView();
-
     }
 
     @Override
@@ -72,6 +86,46 @@ public class DoWorkoutFragment extends
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mViewMvc.registerListener(this);
+
+        bind();
+    }
+
+    private void bind() {
+        // Subscribe to the ViewModel and call render for every emitted state
+        mDisposables.add(mViewModel.states().subscribe(this::render));
+        // Pass the UI's intents to the ViewModel
+        mViewModel.processIntents(intents());
+
+
+    }
+
+    private void render(DoWorkoutViewState doWorkoutViewState) {
+        if (doWorkoutViewState.error() != null) {
+            Log.e("Error", doWorkoutViewState.error().getMessage());
+        }
+        if(doWorkoutViewState.workoutSaved()){
+            DoWorkoutFragmentListener.WorkoutSaved();
+        }
+    }
+
+    private Observable<DoWorkoutIntent> intents() {
+        return Observable.merge(saveWorkoutIntent(), LoadMovements());
+    }
+
+
+    private Observable<DoWorkoutIntent.SaveWorkout> saveWorkoutIntent() {
+        return saveWorkoutPublishSubject;
+    }
+
+    private Observable<DoWorkoutIntent.LoadMovements> LoadMovements() {
+        return loadMovementsPublishSubject;
 
     }
 
@@ -94,7 +148,7 @@ public class DoWorkoutFragment extends
 
     @Override
     public void saveWorkout() {
-        DoWorkoutFragmentListener.saveWorkout();
+        saveWorkoutPublishSubject.onNext(DoWorkoutIntent.SaveWorkout.create(config.getToken(), new Workout(parentActivity.exercises)));
     }
 
     @Override
