@@ -1,4 +1,4 @@
-package fi.breakwaterworks.trackthatbarbellmobile.MainView;
+package fi.breakwaterworks.trackthatbarbellmobile.MainView.MVVM;
 
 
 import androidx.annotation.Nullable;
@@ -14,13 +14,6 @@ public interface MainActivityIntent extends MviIntent {
         }
     }
 
-    class OpenWorkoutTemplatesListActivity implements MainActivityIntent {
-        @Nullable
-        public OpenWorkoutTemplatesListActivity create() {
-            return this;
-        }
-    }
-
     class DoWorkoutActivity implements MainActivityIntent {
         @Nullable
         public DoWorkoutActivity create() {
@@ -28,4 +21,10 @@ public interface MainActivityIntent extends MviIntent {
         }
     }
 
+    class UpdateFromServer implements MainActivityIntent {
+        @Nullable
+        public UpdateFromServer create() {
+            return this;
+        }
+    }
 }

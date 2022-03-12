@@ -1,6 +1,7 @@
 package fi.breakwaterworks.networking.local.DAO;
 
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -13,4 +14,9 @@ public interface UserDAO extends BaseDAO<User> {
 
     @Query("select initDone from users where name=:name ")
     boolean isInitialized(String name);
+
+    @Override
+    @Insert
+    long insert (User user);
+
 }

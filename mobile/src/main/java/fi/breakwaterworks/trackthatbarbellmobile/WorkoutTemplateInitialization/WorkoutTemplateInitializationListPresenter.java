@@ -5,6 +5,8 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -25,7 +27,7 @@ public class WorkoutTemplateInitializationListPresenter implements WorkoutTempla
     }
 
     public WorkoutTemplateInitializationListPresenter(Context context) {
-        this.mActionProcessorHolder = new WorkoutTemplateInitializationActionProcessorHolder(context);
+        this.mActionProcessorHolder = new WorkoutTemplateInitializationActionProcessorHolder(TTBDatabase.getInstance(context),context);
         mIntentsSubject = PublishSubject.create();
         mStatesObservable = compose();
     }

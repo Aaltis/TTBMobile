@@ -2,17 +2,17 @@ package fi.breakwaterworks.networking.local;
 
 import androidx.room.TypeConverter;
 
-import fi.breakwaterworks.model.ExerciseType;
+import fi.breakwaterworks.model.SetType;
 
 public class Converters {
 
     @TypeConverter
-    public String fromExerciseType(ExerciseType exerciseType){
-        return exerciseType.toString();
+    public String fromSetType(SetType setType){
+        return setType.toString();
     }
 
     @TypeConverter
-    public ExerciseType ToExerciseType(String text) {
-        return ExerciseType.valueOf(text);
+    public SetType ToSetType(String text) {
+        return SetType.valueOf(text);
     }
 }

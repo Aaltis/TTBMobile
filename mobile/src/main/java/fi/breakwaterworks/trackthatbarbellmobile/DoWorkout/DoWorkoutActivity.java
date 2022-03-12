@@ -3,6 +3,7 @@ package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
@@ -89,6 +90,7 @@ public class DoWorkoutActivity extends FragmentActivity
 
             @Override
             public void onError(@NonNull Throwable e) {
+                Log.e("DoWorkoutActivity", "onError: ", e);
             }
         }));
     }

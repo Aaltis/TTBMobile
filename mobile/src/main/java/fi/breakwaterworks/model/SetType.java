@@ -1,55 +1,28 @@
 package fi.breakwaterworks.model;
 
-import androidx.annotation.NonNull;
-import androidx.room.*;
+public enum SetType {
+    STRAIGHT_SET("Straight set", false),
+    DROP_SET("Drop set", true),
+    AMRAP("Amrap", false),
+    MTOR("MTOR", true),
+    MYO("Myo", true),
+    REST_PAUSE("Rest Pause", true),
+    WIDOWMAKER("WidowMaker",false);
 
-import fi.breakwaterworks.utility.SetTypeEnum;
+    private String typeName;
+    private boolean multiset;
 
-public class SetType {
-
-
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "set_type_id")
-    private Long specialMethodTypeId;
-    @NonNull
-    private SetTypeEnum setTypeEnum;
-    private String name;
-    private String explanation;
-
-    public SetType(SetTypeEnum setTypeEnum){}
-
-    public SetType(String name, String explanation){
-        this.name = name;
-        this.explanation=explanation;
+    SetType(String name, boolean multiset) {
+        typeName = name;
+        this.multiset = multiset;
     }
 
-    public Long getId() {
-        return specialMethodTypeId;
+    @Override
+    public String toString() {
+        return typeName;
     }
 
-    public void setId(Long specialMethodTypeId) {
-        this.specialMethodTypeId = specialMethodTypeId;
+    public boolean isMultiset() {
+        return multiset;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getExplanation() {
-        return explanation;
-    }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
-    }
-
-    public SetTypeEnum getSetTypeEnum() {
-        return setTypeEnum;
-    }
-
 }

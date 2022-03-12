@@ -70,7 +70,7 @@ public class ExerciseListItemViewMvcImpl extends BaseObservableViewMvc<ExerciseL
             View viewSRWItem = mInflater.inflate(R.layout.srw_item, mViewGroup, false);
 
             TextView textViewType = viewSRWItem.findViewById(R.id.text_view_exercise_list_srw_type);
-            textViewType.setText(srw.getExerciseType().toString());
+            textViewType.setText(srw.getSetType().toString());
 
             TextView textViewSRWInText = viewSRWItem.findViewById(R.id.text_view_exercise_list_srw_in_text);
             textViewSRWInText.setText(srw.getAsString());

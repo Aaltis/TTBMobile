@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
-import fi.breakwaterworks.model.ExerciseType;
 import fi.breakwaterworks.model.Movement;
-import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.model.WorkLog;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -20,7 +19,7 @@ public class WorkoutGenerator {
     WorkLogRepository workLogRepository;
 
     public WorkoutGenerator(Context context) {
-        workLogRepository = new WorkLogRepository(context);
+        workLogRepository = new WorkLogRepository(TTBDatabase.getInstance(context));
     }
 
     public Observable<WorkLog> generateWorkLog(List<Movement> movements, Long workLogId) {
@@ -34,9 +33,10 @@ public class WorkoutGenerator {
                     Workout newWorkout = new Workout();
                     for (Exercise exercise : templateWorkout.getExercises()) {
                         List<Exercise> exerciseList = new ArrayList<>();
-                        switch (exercise.getSetTypeEnum()) {
+                        switch (exercise.getSetType()) {
                             case STRAIGHT_SET:
-                                exerciseList.add(CalculateStraightSet(movements, exercise));
+                                //TODO removed reps and weight from movements, make calculations from sub srw
+                                //exerciseList.add(CalculateStraightSet(movements, exercise));
                                 break;
                         }
                         newWorkout.setExercises(exerciseList);
@@ -54,8 +54,8 @@ public class WorkoutGenerator {
     // 1. Compare user given movement max to exercise. if match, ok
     // 2. Calculate max from user given movement and return.
     //TODO 3. Check database for Exercise with same movement, sets and reps with success. return.
-    private Exercise CalculateStraightSet(List<Movement> movements, Exercise exercise) {
-        Movement userGivenMovement = movements.stream().filter(movement -> exercise.getMovementName().equals(movement.getName())).findAny().orElse(null);
+    /*private Exercise CalculateStraightSet(List<Movement> movements, Exercise exercise) {
+        /*Movement userGivenMovement = movements.stream().filter(movement -> exercise.getMovementName().equals(movement.getName())).findAny().orElse(null);
         double weight;
         if (userGivenMovement.getReps() == exercise.getSetRepsWeights().get(0).getReps()) {
             weight = exercise.getSetRepsWeights().get(0).getWeight();
@@ -66,7 +66,7 @@ public class WorkoutGenerator {
                 exercise.getMovement(),
                 new SetRepsWeight(exercise.getSetRepsWeights().get(0).getSets(),
                         exercise.getSetRepsWeights().get(0).getReps(),
-                        weight, ExerciseType.STRAIGHT_SET));
-    }
+                        weight, SetType.STRAIGHT_SET));*/
+    //}
 
 }

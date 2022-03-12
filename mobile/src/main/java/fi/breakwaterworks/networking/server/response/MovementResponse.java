@@ -1,50 +1,35 @@
-package fi.breakwaterworks.model;
+package fi.breakwaterworks.networking.server.response;
 
 import androidx.annotation.NonNull;
-import androidx.room.*;
 
-import fi.breakwaterworks.networking.server.response.MovementResponse;
+public class MovementResponse {
 
-
-@Entity(tableName = "movements")
-public class Movement {
-
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    private Long Id;
+    private Long id;
     private Long serverId;
     private String name;
     private String type;
     private String stance;
     private String grip;
+    private int reps;
+    private Long weight;
 
-    public Movement() {
+    public MovementResponse() {
     }
 
-
-    public Movement(String name, String stance, String type, long serverId) {
+    public MovementResponse(String name, String details, String type, long serverId) {
         this.name = name;
         this.type = type;
-        this.stance = stance;
+        this.stance = details;
         this.serverId = serverId;
-    }
-
-    public Movement(MovementResponse remoteMovement) {
-        this.serverId = remoteMovement.getId();
-        this.name = remoteMovement.getName();
-        this.type = remoteMovement.getType();
-        this.stance = remoteMovement.getStance();
-        this.serverId = remoteMovement.getId();
-        this.grip = remoteMovement.getGrip();
     }
 
     @NonNull
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(@NonNull Long id) {
-        Id = id;
+        id = id;
     }
 
     public String getName() {
@@ -79,11 +64,28 @@ public class Movement {
         this.grip = grip;
     }
 
+    public Long getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Long weight) {
+        this.weight = weight;
+    }
+
+    public int getReps() {
+        return reps;
+    }
+
+    public void setReps(int reps) {
+        this.reps = reps;
+    }
+
     public Long getServerId() {
         return serverId;
     }
 
     public void setServerId(Long serverId) {
         this.serverId = serverId;
+
     }
 }

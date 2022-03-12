@@ -24,6 +24,19 @@ public interface DoWorkoutIntent extends MviIntent {
     }
 
     @AutoValue
+    abstract class InitialIntent implements DoWorkoutIntent {
+
+        @Nullable
+        public abstract String userToken();
+
+        @Nullable
+        public abstract Workout workout();
+
+        public static InitialIntent create(@Nullable String userToken, @Nullable Workout workout) {
+            return new AutoValue_DoWorkoutIntent_InitialIntent(userToken, workout);
+        }
+    }
+    @AutoValue
     abstract class LoadMovements implements DoWorkoutIntent {
         @Nullable
 

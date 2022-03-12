@@ -1,15 +1,20 @@
 package fi.breakwaterworks.model;
 
-import androidx.annotation.NonNull;
-import androidx.room.*;
-
 import static androidx.room.ForeignKey.CASCADE;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.breakwaterworks.utility.SetTypeEnum;
-import fi.breakwaterworks.utility.SetTypeEnumConverter;
+import fi.breakwaterworks.networking.local.Converters;
 
 
 @Entity(tableName = "exercises",
@@ -19,6 +24,7 @@ import fi.breakwaterworks.utility.SetTypeEnumConverter;
                 onDelete = CASCADE),
         indices = {@Index("exercise_id"),
                 @Index("workout_id")})
+@TypeConverters(Converters.class)
 public class Exercise {
 
     @NonNull
@@ -31,11 +37,9 @@ public class Exercise {
     private int orderNumber;
     private double onRepMax;
 
-    @TypeConverters(SetTypeEnumConverter.class)
-    private SetTypeEnum setTypeEnum;
-
-    @Ignore
+    @TypeConverters(Converters.class)
     private SetType setType;
+
     @Ignore
     private String movementName;
     @ColumnInfo(name = "cycle_one_rm_percent")
@@ -55,9 +59,9 @@ public class Exercise {
     }
 
     @Ignore
-    public Exercise(int orderNumber, String movementName, SetTypeEnum setTypeEnum, List<SetRepsWeight> repetitionList) {
+    public Exercise(int orderNumber, String movementName, SetType setType, List<SetRepsWeight> repetitionList) {
         this.orderNumber = orderNumber;
-        this.setTypeEnum = setTypeEnum;
+        this.setType = setType;
         this.movementName = movementName;
         this.setRepsWeights = repetitionList;
     }
@@ -162,14 +166,6 @@ public class Exercise {
         this.workoutId = workoutId;
     }
 
-    public SetType getSetType() {
-        return setType;
-    }
-
-    public void setSetType(SetType setType) {
-        this.setType = setType;
-    }
-
     public String getMovementName() {
         return movementName;
     }
@@ -178,12 +174,12 @@ public class Exercise {
         this.movementName = movementName;
     }
 
-    public SetTypeEnum getSetTypeEnum() {
-        return setTypeEnum;
+    public SetType getSetType() {
+        return setType;
     }
 
-    public void setSetTypeEnum(SetTypeEnum setTypeEnum) {
-        this.setTypeEnum = setTypeEnum;
+    public void setSetType(SetType setType) {
+        this.setType = setType;
     }
 
     /**
@@ -199,7 +195,7 @@ public class Exercise {
         for (SetRepsWeight latest : setRepsWeightList) {
             SetRepsWeight previous = this.setRepsWeights.get(this.setRepsWeights.size() - 1);
             if (previous.getReps() == latest.getReps() && previous.getWeight() == latest.getWeight()
-            && previous.getExerciseType() == latest.getExerciseType()) {
+            && previous.getSetType() == latest.getSetType()) {
                 previous.setSets(previous.getSets() + 1);
             } else {
                 this.setRepsWeights.add(latest);

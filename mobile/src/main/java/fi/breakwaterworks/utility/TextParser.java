@@ -16,22 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
+import fi.breakwaterworks.model.SetType;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.model.WorkLog;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplateInitialization.WorkoutTemplateInitializationActivity;
 
 public class TextParser {
     WorkLogRepository workLogRepository;
     static String templatesFolder = "templates";
-
+    Context context;
     public TextParser(Context context) {
-        workLogRepository = new WorkLogRepository(context);
+        workLogRepository = new WorkLogRepository(TTBDatabase.getInstance(context));
+        this.context = context;
     }
 
-    public String loadSingleFileFromAssetsAsSingleString(Context context, String file) {
+    public String loadSingleFileFromAssetsAsSingleString(String file) {
         String text = null;
         try {
 
@@ -48,7 +51,7 @@ public class TextParser {
         return text;
     }
 
-    public List<String> loadSingleFileFromAssetsAsListOfStrings(Context context, String file) {
+    public List<String> loadSingleFileFromAssetsAsListOfStrings(String file) {
         List<String> stringList = new ArrayList<String>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(file)))) {
             while (reader.ready()) {
@@ -66,7 +69,7 @@ public class TextParser {
 
     }
 
-    public List<WorkLog> loadWorkoutTemplates(Context context) {
+    public List<WorkLog> loadWorkoutTemplates() {
         String fileList[] = new String[0];
         List<String> jsonList = new ArrayList<>();
         List<WorkLog> workLogs = new ArrayList<>();
@@ -78,14 +81,14 @@ public class TextParser {
         if (fileList != null) {
             for (int i = 0; i < fileList.length; i++) {
                 try {
-                    jsonList.add(loadSingleFileFromAssetsAsSingleString(context, templatesFolder + "/" + fileList[i]));
+                    jsonList.add(loadSingleFileFromAssetsAsSingleString(templatesFolder + "/" + fileList[i]));
                 } catch (Exception ex) {
                     Log.e(TextParser.class.getName(), "loadSingleFileFromAssets:", ex);
                 }
             }
             for (String workLogTemplateString : jsonList) {
                 try {
-                    workLogs.add(jsonToWorklog(workLogTemplateString, context));
+                    workLogs.add(jsonToWorklog(workLogTemplateString));
                 } catch (Exception ex) {
                     Log.e(TextParser.class.getName(), "failed to create json to worklog.:", ex);
                 }
@@ -95,7 +98,7 @@ public class TextParser {
         return workLogs;
     }
 
-    private WorkLog jsonToWorklog(String templateJsonString, Context context) throws JSONException {
+    private WorkLog jsonToWorklog(String templateJsonString) throws JSONException {
         JSONObject workLogJsonObject = new JSONObject(templateJsonString);
         WorkLog workLog = new WorkLog(workLogJsonObject.getString("name"), jsonWorkoutArrayToObjectList(workLogJsonObject.getJSONArray("workouts")), true);
         return workLog;
@@ -116,7 +119,7 @@ public class TextParser {
         for (int e = 0; e < exercicesArray.length(); e++) {
             exerciseList.add(new Exercise(exercicesArray.getJSONObject(e).getInt("orderNumber"),
                     exercicesArray.getJSONObject(e).getString("movementName"),
-                    SetTypeEnum.valueOf(exercicesArray.getJSONObject(e).getString("setType")),
+                    SetType.valueOf(exercicesArray.getJSONObject(e).getString("setType")),
                     jsonSetRepsWeightsArrayToObjectList(exercicesArray.getJSONObject(e).getJSONArray("setRepsWeights"))));
         }
         return exerciseList;
@@ -125,16 +128,20 @@ public class TextParser {
     private List<SetRepsWeight> jsonSetRepsWeightsArrayToObjectList(JSONArray setRepsWeightsArray) throws JSONException {
         List<SetRepsWeight> srwList = new ArrayList<>();
         for (int s = 0; s < setRepsWeightsArray.length(); s++) {
-            srwList.add(new SetRepsWeight(setRepsWeightsArray.getJSONObject(s).getInt("set"),
-                    setRepsWeightsArray.getJSONObject(s).getInt("reps")));
+            srwList.add(new SetRepsWeight(
+                    setRepsWeightsArray.getJSONObject(s).getInt("set"),
+                    setRepsWeightsArray.getJSONObject(s).getInt("reps"),
+                    setRepsWeightsArray.getJSONObject(s).getString("weightUnit"),
+                    SetType.valueOf(setRepsWeightsArray.getJSONObject(s).getString("setType"))
+                    ));
         }
         return srwList;
     }
 
 
-    public Movement[] LoadMovements(Context context) {
+    public Movement[] LoadMovements() {
 
-        List<String> movementLines = loadSingleFileFromAssetsAsListOfStrings(context, "movements.txt");
+        List<String> movementLines = loadSingleFileFromAssetsAsListOfStrings("movements.txt");
         List<Movement> movements = new ArrayList<>();
         for (String line : movementLines) {
             try {
@@ -156,7 +163,7 @@ public class TextParser {
                 if (movement.length > 1) {
                     type = movement[1];
                 }
-                movements.add(new Movement(name, details, type));
+                movements.add(new Movement(name, details, type,0));
 
             } catch (Exception e) {
                 Log.e(WorkoutTemplateInitializationActivity.class.getName(), "LoadMovements: ", e);

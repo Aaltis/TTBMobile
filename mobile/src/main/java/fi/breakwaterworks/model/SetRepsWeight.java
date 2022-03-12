@@ -1,9 +1,15 @@
 package fi.breakwaterworks.model;
 
-import androidx.annotation.NonNull;
-import androidx.room.*;
-
 import static androidx.room.ForeignKey.CASCADE;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import fi.breakwaterworks.networking.local.Converters;
 @Entity(tableName = "set_reps_weights",
@@ -35,7 +41,7 @@ public class SetRepsWeight {
     private boolean success;
     private int reps;
     private int sets;
-    private ExerciseType exerciseType;
+    private SetType setType;
 
     public SetRepsWeight() {
     }
@@ -48,15 +54,23 @@ public class SetRepsWeight {
         this.setReps(reps);
         this.setWeightUnit("kg");
     }
-
     @Ignore
-    public SetRepsWeight(int sets, int reps, double weight, ExerciseType exerciseType) {
+    public SetRepsWeight(int sets, int reps, String weightUnit, SetType setType) {
+        super();
+        this.setOrderNumber(1);
+        this.setSets(sets);
+        this.setReps(reps);
+        this.setType = setType;
+        this.setWeightUnit(weightUnit);
+    }
+    @Ignore
+    public SetRepsWeight(int sets, int reps, double weight, SetType setType) {
         super();
         this.setOrderNumber(1);
         this.setSets(sets);
         this.setReps(reps);
         this.setWeight(weight);
-        this.exerciseType = exerciseType;
+        this.setType = setType;
         this.setWeightUnit("kg");
     }
 
@@ -147,12 +161,12 @@ public class SetRepsWeight {
         this.success = success;
     }
 
-    public ExerciseType getExerciseType() {
-        return exerciseType;
+    public SetType getSetType() {
+        return setType;
     }
 
-    public void setExerciseType(ExerciseType exerciseType) {
-        this.exerciseType = exerciseType;
+    public void setSetType(SetType setType) {
+        this.setType = setType;
     }
 
     public String getAsString() {

@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Timestamp;
+
 import fi.breakwaterworks.networking.Datasource;
 
 @Entity(tableName = "config")
@@ -25,6 +27,8 @@ public class Config {
     protected boolean saveAlwaysLocally;
 
     protected boolean saveAlwaysRemote;
+
+    private Timestamp movementsUpdatedServer;
 
     public Config() {
     }
@@ -92,5 +96,14 @@ public class Config {
             return Datasource.LOCAL;
         }
     }
+
+    public Timestamp getMovementsUpdatedServer() {
+        return movementsUpdatedServer;
+    }
+
+    public void setMovementsUpdatedServer(Timestamp movementsUpdatedServer) {
+        this.movementsUpdatedServer = movementsUpdatedServer;
+    }
+
 
 }

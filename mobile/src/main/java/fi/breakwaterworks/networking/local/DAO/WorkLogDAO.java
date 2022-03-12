@@ -12,7 +12,7 @@ import fi.breakwaterworks.model.WorkLog;
 @Dao
 public interface WorkLogDAO extends BaseDAO<WorkLog> {
     @Insert
-    Long insert(WorkLog workLog);
+    long insert(WorkLog workLog);
 
     @Query("select * from worklogs where worklog_id=:id")
     WorkLog loadWorkLogWithId(long id);
