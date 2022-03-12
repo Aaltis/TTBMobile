@@ -2,6 +2,8 @@ package fi.breakwaterworks.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.*;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -27,7 +29,8 @@ public class WorkLog {
     private String comment;
 
     private boolean template;
-    private Date Date;
+
+    private Timestamp timestamp;
 
     @Ignore
     private List<Workout> workoutList;
@@ -91,14 +94,6 @@ public class WorkLog {
         this.comment = comment;
     }
 
-    public java.util.Date getDate() {
-        return Date;
-    }
-
-    public void setDate(java.util.Date date) {
-        Date = date;
-    }
-
     public List<Workout> getWorkoutList() {
         return workoutList;
     }
@@ -110,6 +105,15 @@ public class WorkLog {
     public List<WorkoutCycle> getCycles() {
         return workoutCycles;
     }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
 
     public void setCycles(List<WorkoutCycle> cycles) {
         this.workoutCycles = cycles;

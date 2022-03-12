@@ -2,6 +2,7 @@ package fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplateInitialization;
 
 import android.content.Context;
 
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.schedulers.Schedulers;
@@ -15,8 +16,8 @@ class WorkoutTemplateInitializationActionProcessorHolder {
     // There is nothing wrong with handler classes (done right)
     private WorkoutGenerator workoutGenerator;
 
-    WorkoutTemplateInitializationActionProcessorHolder(Context context) {
-        this.workLogRepository = new WorkLogRepository(context);
+    WorkoutTemplateInitializationActionProcessorHolder(TTBDatabase ttbDatabase, Context context) {
+        this.workLogRepository = new WorkLogRepository(ttbDatabase);
         this.workoutGenerator = new WorkoutGenerator(context);
     }
 

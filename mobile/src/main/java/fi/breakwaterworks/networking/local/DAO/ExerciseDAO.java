@@ -8,7 +8,6 @@ import androidx.room.RoomWarnings;
 import java.util.List;
 
 import fi.breakwaterworks.model.Exercise;
-import fi.breakwaterworks.utility.SetTypeEnum;
 
 @Dao
 public interface ExerciseDAO extends BaseDAO<Exercise> {
@@ -29,10 +28,10 @@ public interface ExerciseDAO extends BaseDAO<Exercise> {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM exercises INNER JOIN set_reps_weights " +
             " ON  set_reps_weights.parent_exercise_id = exercise_id " +
-            " where exercises.setTypeEnum=:setTypeEnum and set_reps_weights.reps=:reps and set_reps_weights.sets=:sets and success=:success" +
+            " where exercises.setType=:setTypeEnum and set_reps_weights.reps=:reps and set_reps_weights.sets=:sets and success=:success" +
             " order by set_reps_weights.weight")
-    Exercise loadSuccessfullExerciseWithSetRepsWeight (SetTypeEnum setTypeEnum, long reps, long sets, boolean success);
+    Exercise loadSuccessfullExerciseWithSetRepsWeight (String setTypeEnum, long reps, long sets, boolean success);
 
     @Insert
-    Long insert(Exercise exercise);
+    long insert(Exercise exercise);
 }

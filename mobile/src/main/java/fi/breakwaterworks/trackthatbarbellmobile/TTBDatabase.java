@@ -1,7 +1,11 @@
 package fi.breakwaterworks.trackthatbarbellmobile;
 
-import androidx.room.*;
 import android.content.Context;
+
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import java.io.File;
 
@@ -20,10 +24,9 @@ import fi.breakwaterworks.networking.local.DAO.UserDAO;
 import fi.breakwaterworks.networking.local.DAO.WorkLogDAO;
 import fi.breakwaterworks.networking.local.DAO.WorkoutDAO;
 import fi.breakwaterworks.utility.DateConverter;
-import fi.breakwaterworks.utility.SetTypeEnumConverter;
 
 @Database(entities = {User.class, Exercise.class, Movement.class, WorkLog.class, Workout.class, SetRepsWeight.class, Config.class}, version = 1)
-@TypeConverters({DateConverter.class, SetTypeEnumConverter.class})
+@TypeConverters({DateConverter.class})
 public abstract class TTBDatabase extends RoomDatabase {
 
     private static String DB_NAME = "ttb-database.db";

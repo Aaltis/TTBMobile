@@ -3,9 +3,6 @@ package fi.breakwaterworks.trackthatbarbellmobile.common;
 import android.content.Context;
 import android.view.View;
 
-import fi.breakwaterworks.mvibase.MviView;
-import fi.breakwaterworks.trackthatbarbellmobile.MainView.MainActivityViewState;
-
 
 public abstract class BaseViewMvc implements ViewMvc {
 

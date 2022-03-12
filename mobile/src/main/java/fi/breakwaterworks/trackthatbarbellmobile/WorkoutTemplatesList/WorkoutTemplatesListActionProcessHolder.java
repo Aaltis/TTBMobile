@@ -2,6 +2,7 @@ package fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList;
 
 import android.content.Context;
 
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.schedulers.Schedulers;
 import fi.breakwaterworks.networking.local.repository.WorkLogRepository;
@@ -11,7 +12,7 @@ public class WorkoutTemplatesListActionProcessHolder {
     private WorkLogRepository workLogRepository;
 
     public WorkoutTemplatesListActionProcessHolder(Context context) {
-        this.workLogRepository = new WorkLogRepository(context);
+        this.workLogRepository = new WorkLogRepository(TTBDatabase.getInstance(context));
     }
 
     private ObservableTransformer<WorkoutTemplatesListAction.InitialTask, WorkoutTemplatesListResult.Load>

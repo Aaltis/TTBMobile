@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cdcd8695d4ffba10b7440e8692aa01d8",
+    "identityHash": "446fd425218b829de53ebc3a9d7a74b5",
     "entities": [
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `enabled` INTEGER, `initDone` INTEGER, `email` TEXT, `lastPasswordReset` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `enabled` INTEGER, `initDone` INTEGER, `email` TEXT)",
         "fields": [
           {
             "fieldPath": "userId",
@@ -37,12 +37,6 @@
             "columnName": "email",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "lastPasswordReset",
-            "columnName": "lastPasswordReset",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -56,7 +50,7 @@
       },
       {
         "tableName": "exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exercise_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `workout_id` INTEGER, `order_number` INTEGER NOT NULL, `onRepMax` REAL NOT NULL, `setTypeEnum` TEXT, `cycle_one_rm_percent` INTEGER NOT NULL, `of_training_max` INTEGER NOT NULL, `template` INTEGER NOT NULL, `movement_id` INTEGER NOT NULL, FOREIGN KEY(`workout_id`) REFERENCES `workouts`(`workout_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exercise_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `workout_id` INTEGER, `order_number` INTEGER NOT NULL, `onRepMax` REAL NOT NULL, `setType` TEXT, `cycle_one_rm_percent` INTEGER NOT NULL, `of_training_max` INTEGER NOT NULL, `template` INTEGER NOT NULL, `movement_id` INTEGER NOT NULL, FOREIGN KEY(`workout_id`) REFERENCES `workouts`(`workout_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "exerciseId",
@@ -83,8 +77,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "setTypeEnum",
-            "columnName": "setTypeEnum",
+            "fieldPath": "setType",
+            "columnName": "setType",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -153,13 +147,19 @@
       },
       {
         "tableName": "movements",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movement_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `type` TEXT, `stance` TEXT, `grip` TEXT, `reps` INTEGER NOT NULL, `weight` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverId` INTEGER, `name` TEXT, `type` TEXT, `stance` TEXT, `grip` TEXT)",
         "fields": [
           {
-            "fieldPath": "movementId",
-            "columnName": "movement_id",
+            "fieldPath": "Id",
+            "columnName": "Id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "serverId",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "name",
@@ -184,23 +184,11 @@
             "columnName": "grip",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "reps",
-            "columnName": "reps",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "weight",
-            "columnName": "weight",
-            "affinity": "INTEGER",
-            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "movement_id"
+            "Id"
           ],
           "autoGenerate": true
         },
@@ -209,7 +197,7 @@
       },
       {
         "tableName": "worklogs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`worklog_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` INTEGER, `name` TEXT, `description` TEXT, `comment` TEXT, `template` INTEGER NOT NULL, `Date` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `users`(`user_id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`worklog_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` INTEGER, `name` TEXT, `description` TEXT, `comment` TEXT, `template` INTEGER NOT NULL, `timestamp` INTEGER, FOREIGN KEY(`user_id`) REFERENCES `users`(`user_id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "workLogId",
@@ -248,8 +236,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "Date",
-            "columnName": "Date",
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -286,7 +274,7 @@
       },
       {
         "tableName": "workouts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workout_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `worklog_id` INTEGER NOT NULL, `name` TEXT, `date` INTEGER, `comment` TEXT, `template` INTEGER NOT NULL, `unigueId` TEXT, `onGoing` INTEGER NOT NULL, FOREIGN KEY(`worklog_id`) REFERENCES `worklogs`(`worklog_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workout_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `worklog_id` INTEGER NOT NULL, `name` TEXT, `timestamp` INTEGER, `comment` TEXT, `template` INTEGER NOT NULL, `unigueId` TEXT, `onGoing` INTEGER NOT NULL, FOREIGN KEY(`worklog_id`) REFERENCES `worklogs`(`worklog_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "workoutId",
@@ -307,8 +295,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "date",
-            "columnName": "date",
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -369,7 +357,7 @@
       },
       {
         "tableName": "set_reps_weights",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`set_reps_weight_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_exercise_id` INTEGER, `orderNumber` INTEGER NOT NULL, `weight` REAL NOT NULL, `weight_unit` TEXT, `percentage_of_first_set` INTEGER, `success` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `sets` INTEGER NOT NULL, `exerciseType` TEXT, FOREIGN KEY(`parent_exercise_id`) REFERENCES `exercises`(`exercise_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`set_reps_weight_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_exercise_id` INTEGER, `orderNumber` INTEGER NOT NULL, `weight` REAL NOT NULL, `weight_unit` TEXT, `percentage_of_first_set` INTEGER, `success` INTEGER NOT NULL, `reps` INTEGER NOT NULL, `sets` INTEGER NOT NULL, `setType` TEXT, FOREIGN KEY(`parent_exercise_id`) REFERENCES `exercises`(`exercise_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "setRepsWeightId",
@@ -426,8 +414,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "exerciseType",
-            "columnName": "exerciseType",
+            "fieldPath": "setType",
+            "columnName": "setType",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -472,7 +460,7 @@
       },
       {
         "tableName": "config",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`config_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverUrl` TEXT, `token` TEXT, `DefaultDataSource` TEXT, `saveAlwaysLocally` INTEGER NOT NULL, `saveAlwaysRemote` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`config_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverUrl` TEXT, `token` TEXT, `DefaultDataSource` TEXT, `saveAlwaysLocally` INTEGER NOT NULL, `saveAlwaysRemote` INTEGER NOT NULL, `movementsUpdatedServer` INTEGER)",
         "fields": [
           {
             "fieldPath": "configId",
@@ -509,6 +497,12 @@
             "columnName": "saveAlwaysRemote",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "movementsUpdatedServer",
+            "columnName": "movementsUpdatedServer",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -523,7 +517,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cdcd8695d4ffba10b7440e8692aa01d8\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"446fd425218b829de53ebc3a9d7a74b5\")"
     ]
   }
 }

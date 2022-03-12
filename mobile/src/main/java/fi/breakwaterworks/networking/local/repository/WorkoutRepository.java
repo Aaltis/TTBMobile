@@ -1,8 +1,5 @@
 package fi.breakwaterworks.networking.local.repository;
 
-
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -22,6 +19,7 @@ import fi.breakwaterworks.networking.server.response.WorkoutCreatedResponse;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -33,11 +31,11 @@ public class WorkoutRepository {
     SetRepsWeightDAO srwDao;
     WorkoutService workoutService;
 
-    public WorkoutRepository(Context context, String serverUrl) {
-        this.workoutDAO = TTBDatabase.getInstance(context).workoutDAO();
-        this.exerciseDao = TTBDatabase.getInstance(context).exerciseDAO();
-        this.srwDao = TTBDatabase.getInstance(context).setRepsWeightDAO();
-        this.workLogDAO = TTBDatabase.getInstance(context).worklogDAO();
+    public WorkoutRepository(TTBDatabase database, String serverUrl) {
+        this.workoutDAO = database.workoutDAO();
+        this.exerciseDao = database.exerciseDAO();
+        this.srwDao = database.setRepsWeightDAO();
+        this.workLogDAO = database.worklogDAO();
 
         if (serverUrl != null && !serverUrl.isEmpty()) {
             workoutService = RetrofitClientInstance.getRetrofitInstance(serverUrl).create(WorkoutService.class);
@@ -76,10 +74,10 @@ public class WorkoutRepository {
     }
 
     /**
-     * Gets tasks from local data source (sqlite) unless the table is new or empty. In that case it
-     * uses the network data source. This is done to simplify the sample.
+     * If we have remote configuration save database remote and locally.
+     * otherwise only locally
      *
-     * @return
+     * @return Workout
      */
     public Observable<Workout> SaveWorkout(@NonNull final Workout workout, String userToken) {
         if (workoutService != null) {
@@ -95,7 +93,6 @@ public class WorkoutRepository {
     }
 
     public Observable<WorkoutCreatedResponse> SaveWorkoutRemote(@NonNull String userToken, @NonNull final Workout workout) {
-
         return workoutService.saveWorkoutForUser(userToken, workout);
 
     }

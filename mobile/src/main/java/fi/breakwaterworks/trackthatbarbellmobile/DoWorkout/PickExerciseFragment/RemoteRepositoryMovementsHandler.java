@@ -1,15 +1,15 @@
 package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.networking.server.MovementsService;
 import fi.breakwaterworks.networking.server.RetrofitClientInstance;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import fi.breakwaterworks.networking.server.response.MovementResponse;
+import io.reactivex.Single;
+import io.reactivex.observers.DisposableSingleObserver;
 
 public class RemoteRepositoryMovementsHandler {
     private MovementsService movementsService;
@@ -32,17 +32,23 @@ public class RemoteRepositoryMovementsHandler {
         if (movementsService == null) {
             this.listener.onRemoteError("Missing remote url");
         }
+        //  List<Movement> movements = (List<Movement>) movementsService.getAllMovements();
+        Single<List<MovementResponse>> call = movementsService.getAllMovements();
+        call.subscribeWith(new DisposableSingleObserver<List<MovementResponse>>() {
 
-        Call<List<Movement>> call = movementsService.getAllMovements();
-        call.enqueue(new Callback<List<Movement>>() {
             @Override
-            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                listener.returnMovementsFromRemoteDatabase(response.body());
+            public void onError(Throwable e) {
+                listener.onRemoteError(e.getMessage());
             }
 
             @Override
-            public void onFailure(Call<List<Movement>> call, Throwable t) {
-                listener.onRemoteError(t.getMessage());
+            public void onSuccess(List<MovementResponse> response) {
+                List<Movement> movements= new ArrayList<>();
+                for (MovementResponse remoteMovement: response) {
+                    movements.add(new Movement(remoteMovement));
+                }
+
+                listener.returnMovementsFromRemoteDatabase(movements);
             }
         });
     }
@@ -52,18 +58,21 @@ public class RemoteRepositoryMovementsHandler {
             listener.onRemoteError("Missing remote url");
             return;
         }
-        Call<List<Movement>> call = movementsService.getMovementsWithName(query);
-        call.enqueue(new Callback<List<Movement>>() {
+        Single<List<Movement>> call = movementsService.getMovementsWithName(query);
+
+
+
+        call.subscribeWith(new DisposableSingleObserver<List<Movement>>() {
+
             @Override
-            public void onResponse(Call<List<Movement>> call, Response<List<Movement>> response) {
-                listener.returnMovementsFromRemoteDatabase(response.body());
+            public void onError(Throwable e) {
+                listener.onRemoteError(e.getMessage());
             }
 
             @Override
-            public void onFailure(Call<List<Movement>> call, Throwable t) {
-                listener.onRemoteError(t.getMessage());
+            public void onSuccess(List<Movement> response) {
+                listener.returnMovementsFromRemoteDatabase(response);
             }
-
         });
     }
 }

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.breakwaterworks.model.ExerciseType;
+import fi.breakwaterworks.model.SetType;
 import fi.breakwaterworks.model.SetRepsWeight;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.databinding.SrwDialogBinding;
@@ -51,12 +51,12 @@ public class SRWDialog extends Dialog {
         });
 
 
-        binding.spinnerType.setAdapter(new ArrayAdapter<ExerciseType>(getContext(), android.R.layout.simple_spinner_item, ExerciseType.values()));
+        binding.spinnerType.setAdapter(new ArrayAdapter<SetType>(getContext(), android.R.layout.simple_spinner_item, SetType.values()));
         binding.spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, int position, long id) {
                 spinnerPosition = position;
-                ExerciseType selected_val = (ExerciseType) binding.spinnerType.getItemAtPosition(position);
+                SetType selected_val = (SetType) binding.spinnerType.getItemAtPosition(position);
                 if (selected_val.isMultiset()) {
                     binding.srwDialogPlusButton.setVisibility(View.VISIBLE);
                     binding.buttonAddMultiple.setVisibility(View.INVISIBLE);
@@ -82,15 +82,15 @@ public class SRWDialog extends Dialog {
             setRepsWeightList.add(new SetRepsWeight(Integer.parseInt(binding.srwDialogEdittextSet.getText().toString()),
                     Integer.parseInt(binding.srwDialogEdittextReps.getText().toString()),
                     Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString()),
-                    (ExerciseType) binding.spinnerType.getItemAtPosition(spinnerPosition)));
+                    (SetType) binding.spinnerType.getItemAtPosition(spinnerPosition)));
 
             refreshList(binding);
 
         });
 
         binding.srwDialogButtonSave.setOnClickListener(v -> {
-            ExerciseType exerciseType = (ExerciseType) binding.spinnerType.getItemAtPosition(spinnerPosition);
-            if (exerciseType != null && exerciseType.isMultiset()) {
+            SetType setType = (SetType) binding.spinnerType.getItemAtPosition(spinnerPosition);
+            if (setType != null && setType.isMultiset()) {
                 mListener.setSetRepsWeightToExercise(setRepsWeightList);
             }
 
@@ -112,7 +112,7 @@ public class SRWDialog extends Dialog {
             if(!binding.srwDialogEdittextWeight.getText().toString().isEmpty()){
                 weigh=Double.parseDouble(binding.srwDialogEdittextWeight.getText().toString());
             }
-            setRepsWeightList.add(new SetRepsWeight(sets, reps, weigh, exerciseType ));
+            setRepsWeightList.add(new SetRepsWeight(sets, reps, weigh, setType));
             mListener.setSetRepsWeightToExercise(setRepsWeightList);
 
             dismiss();

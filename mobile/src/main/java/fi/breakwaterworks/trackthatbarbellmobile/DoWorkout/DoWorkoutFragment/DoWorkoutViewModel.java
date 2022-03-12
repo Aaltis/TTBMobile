@@ -1,7 +1,5 @@
 package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
@@ -83,8 +81,8 @@ public class DoWorkoutViewModel extends ViewModel
     private final ObservableTransformer<DoWorkoutIntent, DoWorkoutIntent> intentFilter =
             intents -> intents.publish(shared ->
                     Observable.merge(
-                            shared.ofType(DoWorkoutIntent.SaveWorkout.class).take(1),
-                            shared.filter(intent -> !(intent instanceof DoWorkoutIntent.SaveWorkout))
+                            shared.ofType(DoWorkoutIntent.InitialIntent.class).take(1),
+                            shared.filter(intent -> !(intent instanceof DoWorkoutIntent.InitialIntent))
                     )
             );
 

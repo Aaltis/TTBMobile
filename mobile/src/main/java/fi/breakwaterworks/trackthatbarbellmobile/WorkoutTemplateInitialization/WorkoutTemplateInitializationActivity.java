@@ -6,17 +6,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
 import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList.WorkoutTemplatesListActivity;
-import fi.breakwaterworks.model.Movement;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -79,10 +80,10 @@ public class WorkoutTemplateInitializationActivity extends AppCompatActivity imp
             String reps = ((EditText) view.findViewById(R.id.item_workout_template_movement_reps_amount_edit_text)).getText().toString();
             try {
                 if (!reps.isEmpty()) {
-                    movement.setReps(Integer.valueOf(reps));
+                    // movement.setReps(Integer.valueOf(reps));
                 }
                 if (!weight.isEmpty()) {
-                    movement.setWeight(Long.parseLong(weight));
+                    //movement.setWeight(Long.parseLong(weight));
                 }
             }catch (Exception ex){
                 Log.e(WorkoutTemplateInitializationActivity.class.getName(), "getMovementsWithSetsReps: ", ex );

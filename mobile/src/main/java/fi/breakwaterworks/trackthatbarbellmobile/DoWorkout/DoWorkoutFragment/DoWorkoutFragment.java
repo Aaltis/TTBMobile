@@ -23,6 +23,7 @@ import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.view.ExerciseListViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.SchedulerProvider;
 
+import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.common.onBackPressedListener;
 import io.reactivex.Observable;
@@ -68,7 +69,7 @@ public class DoWorkoutFragment extends
         mViewMvc = getCompositionRoot().getViewMvcFactory().getExerciseListViewMvc(container, parentActivity);
         mViewMvc.registerListener(this);
         mViewModel = new DoWorkoutViewModel(new DoWorkoutActionProcessHolder(
-                new WorkoutRepository(getContext(), config.getServerUrl()),
+                new WorkoutRepository(TTBDatabase.getInstance(getContext()), config.getServerUrl()),
                 new MovementRepository(getContext()),
                 SchedulerProvider.getInstance()));
         mDisposables = new CompositeDisposable();

@@ -1,13 +1,14 @@
 package fi.breakwaterworks.utility;
 
-import androidx.room.*;
+import androidx.room.TypeConverter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class DateConverter {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static Timestamp fromTimestamp(Long value) {
+        return value == null ? null : new Timestamp(value);
     }
 
     @TypeConverter

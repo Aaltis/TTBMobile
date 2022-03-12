@@ -1,6 +1,7 @@
 package fi.breakwaterworks.model;
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Workout {
     private long worklogId;
     @ColumnInfo(name = "name")
     private String name;
-    private Date date;
+    private Timestamp timestamp;
     private String comment;
     private boolean template;
 
@@ -39,7 +40,7 @@ public class Workout {
     public Workout(WorkoutCreatedResponse response) {
         this.unigueId = response.getUnigueId();
         this.name = response.getName();
-        this.date = response.getDate();
+        this.timestamp = new Timestamp(response.getDate().getTime());
         this.exercises = new ArrayList<>(response.getExercises());
     }
 
@@ -59,10 +60,7 @@ public class Workout {
     public Workout() {
     }
 
-    @Ignore
-    public Workout(Date date) {
-        this.setDate(date);
-    }
+
 
     @Ignore
     public Workout(List<Exercise> exercises) {
@@ -97,12 +95,12 @@ public class Workout {
         this.exercises = exercises;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getComment() {

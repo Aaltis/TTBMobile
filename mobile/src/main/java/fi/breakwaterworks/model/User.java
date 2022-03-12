@@ -31,8 +31,6 @@ public class User {
     @Ignore
     protected Set<WorkLog> worklogs;
 
-    protected Date lastPasswordReset;
-
     public User() {
     }
 
@@ -92,12 +90,5 @@ public class User {
         this.worklogs = worklogs;
     }
 
-    public Date getLastPasswordReset() {
-        return lastPasswordReset;
-    }
-
-    public void setLastPasswordReset(Date lastPasswordReset) {
-        this.lastPasswordReset = lastPasswordReset;
-    }
 
 }

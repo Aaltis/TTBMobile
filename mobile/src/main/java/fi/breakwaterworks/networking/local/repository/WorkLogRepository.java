@@ -1,13 +1,13 @@
 package fi.breakwaterworks.networking.local.repository;
 
-import android.content.Context;
 import android.util.Log;
+
+import androidx.room.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import androidx.room.Transaction;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
 import fi.breakwaterworks.model.SetRepsWeight;
@@ -22,8 +22,8 @@ public class WorkLogRepository {
 
     TTBDatabase database;
 
-    public WorkLogRepository(Context context) {
-        this.database = TTBDatabase.getInstance(context);
+    public WorkLogRepository(TTBDatabase ttbDatabase) {
+        this.database = ttbDatabase;
 
     }
 
@@ -97,7 +97,7 @@ public class WorkLogRepository {
         for (Exercise ex: exercises) {
             Movement movement = database.movementDAO().getMovementWithName(ex.getMovementName());
             if (movement != null) {
-                ex.setMovementId(movement.getMovementId());
+                ex.setMovementId(movement.getId());
             }
         }
     }
@@ -114,8 +114,8 @@ public class WorkLogRepository {
                     List<Exercise> exercises = database.exerciseDAO().loadExercisesWithWorkoutId(workout.getId());
                     for (Exercise exercise : exercises) {
                         Movement movement = database.movementDAO().getMovementWithId(exercise.getMovementId());
-                        if (!movementIds.contains(movement.getMovementId())) {
-                            movementIds.add(movement.getMovementId());
+                        if (!movementIds.contains(movement.getId())) {
+                            movementIds.add(movement.getId());
                             movements.add(movement);
                         }
                     }

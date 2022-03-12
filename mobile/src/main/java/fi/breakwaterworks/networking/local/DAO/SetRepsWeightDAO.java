@@ -14,7 +14,7 @@ public interface SetRepsWeightDAO extends BaseDAO<SetRepsWeight> {
    // public List<SetRepsWeight> get(int set,int reps);
 
     @Insert
-    Long insert(SetRepsWeight setRepsWeight);
+    long insert(SetRepsWeight setRepsWeight);
 
     @Query("SELECT * FROM set_reps_weights WHERE parent_exercise_id = :exerciseId")
     List<SetRepsWeight> loadWithExerciseId(long exerciseId);
