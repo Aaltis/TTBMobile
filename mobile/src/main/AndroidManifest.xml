@@ -21,7 +21,8 @@
             android:exported="false" />
         <activity
             android:name=".DoWorkout.DoWorkoutActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName="MainView.MainActivity" />
         <activity
             android:name=".MainView.MainActivity"
             android:screenOrientation="portrait" >

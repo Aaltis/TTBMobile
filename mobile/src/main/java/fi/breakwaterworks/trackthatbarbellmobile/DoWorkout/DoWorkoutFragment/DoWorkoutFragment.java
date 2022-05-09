@@ -1,6 +1,7 @@
 package fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.List;
 
@@ -17,12 +19,10 @@ import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.networking.local.repository.MovementRepository;
 import fi.breakwaterworks.networking.local.repository.WorkoutRepository;
-import fi.breakwaterworks.trackthatbarbellmobile.Schedulers.BaseSchedulerProvider;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActionProcessHolder;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.view.ExerciseListViewMvc;
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.SchedulerProvider;
-
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import fi.breakwaterworks.trackthatbarbellmobile.common.BaseFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.common.onBackPressedListener;
@@ -110,6 +110,22 @@ public class DoWorkoutFragment extends
     private void render(DoWorkoutViewState doWorkoutViewState) {
         if (doWorkoutViewState.error() != null) {
             Log.e("Error", doWorkoutViewState.error().getMessage());
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Error")
+                    .setMessage(doWorkoutViewState.error().getLocalizedMessage())
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Continue with delete operation
+                        }
+                    })
+
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
         if(doWorkoutViewState.workoutSaved()){
             DoWorkoutFragmentListener.WorkoutSaved();

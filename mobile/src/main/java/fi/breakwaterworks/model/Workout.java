@@ -1,15 +1,19 @@
 package fi.breakwaterworks.model;
 
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.annotation.NonNull;
-import androidx.room.*;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-import static androidx.room.ForeignKey.CASCADE;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import fi.breakwaterworks.networking.server.response.WorkoutCreatedResponse;
 
@@ -32,8 +36,8 @@ public class Workout {
     private Timestamp timestamp;
     private String comment;
     private boolean template;
-
-
+    //workout id on server.
+    private long remoteId;
     //used at finding from server;
     private String unigueId;
 
@@ -142,5 +146,12 @@ public class Workout {
         this.unigueId = unigueId;
     }
 
+    public long getRemoteId() {
+        return remoteId;
+    }
+
+    public void setRemoteId(long remoteId) {
+        this.remoteId = remoteId;
+    }
 }
 
