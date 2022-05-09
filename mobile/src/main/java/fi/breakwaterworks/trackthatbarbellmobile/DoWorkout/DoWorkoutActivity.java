@@ -15,7 +15,6 @@ import java.util.List;
 import fi.breakwaterworks.model.Config;
 import fi.breakwaterworks.model.Exercise;
 import fi.breakwaterworks.model.Movement;
-import fi.breakwaterworks.model.Workout;
 import fi.breakwaterworks.mvibase.MviView;
 import fi.breakwaterworks.networking.local.repository.ConfigRepository;
 import fi.breakwaterworks.networking.local.usecase.LoadConfigUseCase;
@@ -27,15 +26,11 @@ import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.DoWorkoutFragment.DoW
 import fi.breakwaterworks.trackthatbarbellmobile.DoWorkout.PickExerciseFragment.view.PickMovementFragment;
 import fi.breakwaterworks.trackthatbarbellmobile.MainView.MainActivity;
 import fi.breakwaterworks.trackthatbarbellmobile.R;
-import fi.breakwaterworks.trackthatbarbellmobile.WorkoutTemplatesList.WorkoutTemplatesListActivity;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DoWorkoutActivity extends FragmentActivity
         implements DoWorkoutFragment.Listener,
@@ -65,7 +60,6 @@ public class DoWorkoutActivity extends FragmentActivity
         leaveWorkoutDialog.mListener = this;
 
         configRepository = new ConfigRepository(this);
-
 
     }
 
@@ -174,6 +168,7 @@ public class DoWorkoutActivity extends FragmentActivity
         Context context = DoWorkoutActivity.this;
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+        this.finish();
     }
 
     @Override
@@ -202,6 +197,8 @@ public class DoWorkoutActivity extends FragmentActivity
         if (save) {
             saveWorkout();
         }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         this.finish();
     }
 

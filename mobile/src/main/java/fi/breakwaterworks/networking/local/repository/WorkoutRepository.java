@@ -19,7 +19,6 @@ import fi.breakwaterworks.networking.server.response.WorkoutCreatedResponse;
 import fi.breakwaterworks.trackthatbarbellmobile.TTBDatabase;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -52,6 +51,7 @@ public class WorkoutRepository {
         List<Exercise> exercises = workout.getExercises();
         for (int i = 0; i < exercises.size() - 1; i++) {
             workout.getExercises().get(i).setWorkoutId(workoutId);
+            Exercise exercise = workout.getExercises().get(i);
             long exerciseId = exerciseDao.insert(workout.getExercises().get(i));
             List<SetRepsWeight> srwList = workout.getExercises().get(i).getSetRepsWeights();
             for (int j = 0; j < srwList.size() - 1; j++) {
@@ -80,25 +80,36 @@ public class WorkoutRepository {
      * @return Workout
      */
     public Observable<Workout> SaveWorkout(@NonNull final Workout workout, String userToken) {
-        if (workoutService != null) {
-            //https://openclassrooms.com/en/courses/4788266-integrate-remote-data-into-your-app/5293916-chaining-different-network-queries-with-rxjava
-            return SaveWorkoutRemote(userToken, workout)
-                    .map(this::ResponseToWorkout)
-                    .map(this::SaveWorkoutLocally)
-                    .flatMap(workoutSingle -> workoutSingle);
 
-        } else {
-            return SaveWorkoutLocally(workout);
-        }
+        return SaveWorkoutLocally(workout)
+                .flatMap(savedLocalWorkout -> {
+                    if (savedLocalWorkout != null  && workoutService != null) {
+                         SaveWorkoutRemote(userToken, workout)
+                         .map(this::ResponseToWorkout)
+                         .map(remoteWorkout ->{
+                            return updateLocalWorkoutRemoteId(savedLocalWorkout, remoteWorkout);
+                         });
+
+                    }
+                    return Observable.just(savedLocalWorkout);
+                });
     }
 
     public Observable<WorkoutCreatedResponse> SaveWorkoutRemote(@NonNull String userToken, @NonNull final Workout workout) {
         return workoutService.saveWorkoutForUser(userToken, workout);
-
     }
 
     private Workout ResponseToWorkout(WorkoutCreatedResponse response) {
         return new Workout(response);
+    }
+
+    private Observable<Workout> updateLocalWorkoutRemoteId(Workout savedLocalWorkout, Workout remoteWorkout) {
+        return Observable.fromCallable(() -> {
+            savedLocalWorkout.setRemoteId(remoteWorkout.getRemoteId());
+            workoutDAO.insert(savedLocalWorkout);
+
+            return savedLocalWorkout;
+        });
     }
 
     private Observable<Workout> SaveWorkoutLocally(Workout workout) {

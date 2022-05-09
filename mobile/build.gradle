@@ -84,9 +84,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     def junitVersion = "4.13.2"
-
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.androidx.test:runner:1.0.2'
+    androidTestImplementation 'com.androidx.espresso:espresso-core:3.0.2'
     // Dependencies for local unit tests
     testImplementation "junit:junit:$junitVersion"
 

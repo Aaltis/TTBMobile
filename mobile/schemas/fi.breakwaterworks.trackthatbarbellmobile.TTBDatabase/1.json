@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "446fd425218b829de53ebc3a9d7a74b5",
+    "identityHash": "3dbbca3e0434ccde91d9e3a94b1fcde0",
     "entities": [
       {
         "tableName": "users",
@@ -274,7 +274,7 @@
       },
       {
         "tableName": "workouts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workout_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `worklog_id` INTEGER NOT NULL, `name` TEXT, `timestamp` INTEGER, `comment` TEXT, `template` INTEGER NOT NULL, `unigueId` TEXT, `onGoing` INTEGER NOT NULL, FOREIGN KEY(`worklog_id`) REFERENCES `worklogs`(`worklog_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workout_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `worklog_id` INTEGER NOT NULL, `name` TEXT, `timestamp` INTEGER, `comment` TEXT, `template` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, `unigueId` TEXT, `onGoing` INTEGER NOT NULL, FOREIGN KEY(`worklog_id`) REFERENCES `worklogs`(`worklog_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "workoutId",
@@ -309,6 +309,12 @@
           {
             "fieldPath": "template",
             "columnName": "template",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -517,7 +523,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"446fd425218b829de53ebc3a9d7a74b5\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3dbbca3e0434ccde91d9e3a94b1fcde0\")"
     ]
   }
 }
