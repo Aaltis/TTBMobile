@@ -17,7 +17,7 @@ https://github.com/oldergod/android-architecture/tree/todo-mvi-rxjava
 
 Some ideas taken from:
 
-Move Arcitehture taken from 
+Move Architecture taken from 
 https://gofore.udemy.com/course/android-architecture/
 - Separating ui from activity and making activity controller instead of separate Presenter.
 - Dependence injection, separating classes to:
