@@ -1,5 +1,13 @@
 # TrackThatbarbellMobile
 
+This is my hobby project that works at own or can be used with backend: [TracktThatBarbell](https://github.com/Aaltis/TTB)
+
+I hope to get this released someday, possibly 2022.
+
+---
+
+## Architecture:
+
 This project is to test MVI with RxJava.
 Reducor and other parts that exist from activity to prosessholder is taken from:
 https://github.com/oldergod/android-architecture/tree/todo-mvi-rxjava
@@ -18,6 +26,23 @@ https://gofore.udemy.com/course/android-architecture/
 	this is separation of concerns
 
 
+## MVI/RXJAVA in practice, DoWorkoutFragment:
+
+```mermaid
+sequenceDiagram
+    DoworkoutFragment->> DoWorkoutViewModel: Send Intent
+	activate DoWorkoutViewModel
+	Note right of DoWorkoutViewModel: this is handled by compose 
+	DoWorkoutViewModel ->> DoWorkoutViewModel: intentFilter
+	DoWorkoutViewModel ->> DoWorkoutViewModel: actionFromIntent
+	DoWorkoutViewModel ->> DoWorkoutActionProcessHolder: send DoWorkoutAction 
+	DoWorkoutActionProcessHolder -->> DoWorkoutViewModel: return DoWorkoutResult 
+	DoWorkoutViewModel ->> DoWorkoutViewModel: reducer
+ 	DoWorkoutViewModel -->> DoworkoutFragment: return DoWorkoutViewState
+ 	deactivate DoWorkoutViewModel
+
+```
+
 ---
 
 ## DONE:
@@ -35,9 +60,9 @@ DoWorkout
 
 ## TODO:
  - Look at saved workouts
+ - End To End UI Tests.
  - refactor doworkoutactivity
 	- remove fragments
 	- movementpickerfragment to custom dialog.
  - create workout/s from template.
- - tests.
  - make search for sets in history to check should you lift weight.
